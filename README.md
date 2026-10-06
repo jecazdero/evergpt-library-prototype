@@ -13,68 +13,26 @@ Design assignment for Foundever · Product Design · 2026
 
 ## The problem
 
-In EverGPT, **the chat holds the work, and the asset is a byproduct of it.** The sidebar lists chats by name ("OKRs review", "Design system updates"), but people don't remember chat names. They remember what they made: "the sales webpage" or "the Q3 deck for the client." Once a conversation scrolls out of view, the asset is effectively lost.
+Assets made in EverGPT live inside the chats that produced them. People remember *what* they made, not which chat it was in, so finding an asset later means digging through conversations and guessing whether it's the latest version, whether it's live, and who can see it.
 
-> Employees create valuable assets in EverGPT, but those assets live inside conversations. To find one later, they have to remember which chat produced it, dig through it, and guess whether it's the latest version, whether it's live, and who can see it. The result is lost work, duplicated effort, and risk: people can't tell what's published.
+The result is lost work, duplicated effort and risk. Foundever handles client data, so not knowing whether a page is public on the web is a governance problem, not a cosmetic one.
 
-The risk matters more here than in most products. Foundever is a BPO that handles client data, so "is this page public on the web?" is a governance question, not a cosmetic one. The current UI makes this worse: the same asset card shows both "Not published" and a "Draft" chip, two signals that seem to describe one thing.
-
-### Jobs to be done
-
-| Job | The user's question |
-|---|---|
-| **Find** | "Where's the thing I made last week?" and "What did a colleague send me?" |
-| **Understand** | What is it? Is it live? Who can see it? |
-| **Act** | Continue editing, share, publish or update, duplicate, download, delete |
+**Users need to:** **find** what they made or were sent, **understand** whether it's live and who can see it, and **act** on it (edit, share, publish).
 
 ---
 
 ## The solution
 
-A Library, one click below **New chat**, where assets are listed in their own right, with their state visible at a glance and the right next action ready.
+A **Library** in the sidebar, right under New chat, where the asset is the main object and the chat is where it came from.
 
-### 1. The asset becomes the main object
-- **My assets** and **Shared with me** tabs. Who owns an asset is the main split, because it decides what you can do with it.
-- Search across title, content *and* source chat name, so "sales" finds the sales page even if its chat was called something else.
-- Only two filters, Type and Status. Sorted by last edited by default.
-- A list view with small thumbnails is the default, and a grid view is one click away. The list is easier to scan for details; the thumbnails help people recognise visual assets.
+- **Find:** *My assets* and *Shared with me* tabs, search across title, content and chat name, Type and Status filters, sorted by last edited.
+- **Understand:** **status** (Draft, Published, *Published · changes pending*, Unpublished) and **visibility** (Only you, Shared, Foundever, Public) are shown separately. Today they're mixed into one chip, which is what causes the confusion.
+- **Act:** the primary button follows the asset's state: *Publish*, *Update live version* or *Republish*. Editing goes back through chat with *Edit in new chat*.
+- **Safe by design:** only *Public* gets a warning colour, and making something public asks for confirmation. Making it more private takes one click.
 
-### 2. Status and visibility are separate
-Putting both in one chip is what causes today's confusion, so the Library splits them into two independent questions:
+**Out of V1 on purpose:** folders, tags, version history and bulk actions. At tens of assets per person, search and recency are enough.
 
-| **Status**: which version is live? | **Visibility**: who can see it? |
-|---|---|
-| Draft | 🔒 Only you |
-| Published | 👥 Shared with people |
-| **Published · changes pending** | 🏢 Anyone at Foundever |
-| Unpublished | 🌐 Public on the web |
-
-**Published · changes pending** is the state most products get wrong. Someone edits the live sales page in chat, and colleagues keep seeing the old version without anyone realising. The Library calls it out and makes **Update live version** the primary action.
-
-### 3. Riskier visibility looks riskier
-- Visibility goes up in steps from private to public. Only **Public** gets a warning colour, because a page made public by accident is the most costly mistake in the system.
-- **Friction only where it protects.** Making something public asks for confirmation ("This page will be visible to anyone on the internet"). Making it more private takes one click.
-
-### 4. The primary action depends on the state
-The asset panel reuses the right-side preview panel people already know from chat. Its primary button always moves the asset to the next step of its lifecycle: **Publish**, **Update live version** or **Republish**. When there's nothing left to do, the button changes to a disabled "✓ Published" confirmation. **Share** sits next to it in every state.
-
-### 5. Editing goes back through chat
-EverGPT edits through conversation, so the Library doesn't try to be an editor. **Edit in new chat** opens a new conversation with the asset loaded. **Chat history** lets you pick up an earlier chat where you left off. In chat, the asset card shows its real status and a **Saved to Library · View** link, so you can get back to the Library from where the asset was made.
-
-### Edge cases
-- **Shared with me, as a Viewer:** a colleague's chat is private, so the primary action is **Duplicate and edit**.
-- **Source chat deleted:** the asset stays, its source reads "Source chat deleted", and Edit in new chat still works.
-- **Empty Library:** explains what will appear here and suggests prompts to get started.
-
-### Scope decisions
-
-**In V1:** retrieval and clear status first. **Left out on purpose:** folders, tags, team spaces, comments, full version history, analytics and bulk actions. At the expected scale (tens of assets per person, not hundreds), search plus recency is enough, and organisation features only pay off once people trust the Library as the place their work lives.
-
-### How success is measured
-- **Main metric:** the re-engagement rate, meaning the % of assets reopened after the session that created them.
-- **Find:** search-to-open rate, and searches that end without a click.
-- **Understand:** in usability tests, can people correctly say whether an asset is live and who can see it?
-- **Guardrail:** accidental publishes and unintended public pages should go down.
+**Main success metric:** the share of assets reopened after the session that created them.
 
 The full reasoning, assumptions and open questions are in the [design plan](docs/EverGPT_Library_Plan.md).
 
