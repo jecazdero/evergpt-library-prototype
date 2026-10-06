@@ -103,12 +103,3 @@ Then open http://localhost:5173. To build static files into `dist/` (they use re
 ```bash
 npm run build
 ```
-
----
-
-## Differences from the Figma file
-
-- **Dates.** In the brief, "Design system update notes · 5d ago" is listed above "Acme retail client pitch · Sep 28", and "EMEA · 4d ago" above "Holiday peak · Sep 29". Under the brief's own rule ("Nd ago" for anything within a week), Sep 28 would show as "4d ago" and couldn't sort below 5d ago. Those two assets use **Sep 26** instead, so the Figma order holds.
-- **Tab count** shows the real count (8), not the Figma placeholder (14), as the brief asks.
-- **Previews** are real scaled React renders, as the brief asks, rather than the grey wireframe blocks in the Figma thumbnails.
-- **The Library nav icon** is drawn inline to match the Figma glyph, because Tabler has no exact equivalent. Every other icon comes from `@tabler/icons-react`.
