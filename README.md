@@ -38,28 +38,6 @@ The full reasoning, assumptions and open questions are in the [design plan](docs
 
 ---
 
-## The prototype
-
-A clickable, high-fidelity prototype built to match the existing EverGPT UI. It follows one scripted scenario end to end and behaves realistically everywhere else.
-
-> **Scenario:** Randy Bell needs the sales webpage he made last week. He searches "sales", sees it's *Published · changes pending · Public*, updates the live version, and shares it with his manager.
-
-- Click **"Randy Bell"** in the sidebar for the demo menu: *Reset demo*, *Show empty Library*, *Show annotation pins*.
-- **Shift+R** resets the demo. A page refresh resets everything too.
-- Designed for desktop at 1440 × 900 (works from 1280 to 1920 px wide).
-
-### Figma frames
-
-| Frame | Link |
-|---|---|
-| Library, list view (primary screen) | [8:2](https://www.figma.com/design/JKdxDDlWUkhVyrOpxHYgSP/Foundever?node-id=8-2) |
-| Library, grid view | [14:16](https://www.figma.com/design/JKdxDDlWUkhVyrOpxHYgSP/Foundever?node-id=14-16) |
-| Annotations, main proposal | [12:100](https://www.figma.com/design/JKdxDDlWUkhVyrOpxHYgSP/Foundever?node-id=12-100) |
-| EverGPT design system | [28:92](https://www.figma.com/design/JKdxDDlWUkhVyrOpxHYgSP/Foundever?node-id=28-92) |
-| Existing screens (chat, empty state) | [5:37](https://www.figma.com/design/JKdxDDlWUkhVyrOpxHYgSP/Foundever?node-id=5-37) |
-
----
-
 ## Tech stack
 
 | Layer | Choice | Why |
