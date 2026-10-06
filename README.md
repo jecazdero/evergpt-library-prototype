@@ -7,7 +7,7 @@ Design assignment for Foundever · Product Design · 2026
 | | |
 |---|---|
 | 🎨 **Figma** | [EverGPT Library: design file](https://www.figma.com/design/JKdxDDlWUkhVyrOpxHYgSP/Foundever?node-id=12-169) |
-| ▶️ **Live prototype** | `TODO: add deployed URL` |
+| ▶️ **Live prototype** | [evergpt-library-prototype.netlify.app](https://evergpt-library-prototype.netlify.app) |
 
 ---
 
