@@ -1,0 +1,1425 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EverGPT Design System</title>
+<meta name="description" content="EverGPT design direction: tokens, type, components and Library guidance, sampled from the Foundever EverGPT screens.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans:wght@400;500;700&family=Figtree:wght@600;700&display=swap" rel="stylesheet">
+<!--
+  HOW TO USE THIS FILE (for people and coding agents)
+  - Design tokens: the <style id="evergpt-tokens"> block holds every token as a CSS custom property, plus .t-* type classes. Copy it as-is.
+  - Components: the <style id="evergpt-components"> block holds the eg-* component classes. Markup examples sit in each .stage element.
+  - Machine-readable tokens: <script type="application/json" id="evergpt-tokens-json">.
+  - Rules: read the "Principles" and "Library direction" sections before building new screens.
+  - Source: values sampled from the 2x screenshots in the Foundever EverGPT Library assignment.
+-->
+<style id="evergpt-tokens">
+:root {
+  --surface: #ffffff;
+  --surface-sidebar: #f9f9fb;
+  --surface-muted: #f3f2f7;
+  --surface-chip: #ecebf1;
+  --surface-tile: #f2f2f2;
+  --surface-badge: #f2f2f0;
+  --border: #ebebed;
+  --border-soft: #f2f2f2;
+  --border-control: #d8d7dc;
+  --brand: #5959eb;
+  --on-brand: #ffffff;
+  --brand-soft: #e4e4fe;
+  --brand-tint: #eeedff;
+  --brand-line: #908bff;
+  --brand-ink: #474397;
+  --ink: #0a0a30;
+  --ink-nav: #111114;
+  --ink-secondary: #45444a;
+  --ink-muted: #636363;
+  --ink-footnote: #626076;
+  --ink-placeholder: #787586;
+  --avatar: #aaefb9;
+  --on-avatar: #0c3b1a;
+  --status-published: #e3f5e8;
+  --on-status-published: #1b6b34;
+  --status-shared: var(--brand-soft);
+  --on-status-shared: #3d3ab8;
+  --status-review: #fdf1d8;
+  --on-status-review: #8a5a00;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-full: 9999px;
+  --shadow-composer: 0 6px 20px rgba(20, 18, 60, 0.08);
+  --shadow-menu: 0 8px 24px rgba(20, 18, 60, 0.12);
+  --sidebar-width: 252px;
+  --header-height: 64px;
+  --composer-width: 560px;
+  --control-height: 32px;
+  --icon-button: 36px;
+  --icon: 18px;
+  --font-ui: Inter, system-ui, -apple-system, Segoe UI, sans-serif;
+  --font-chat: "Noto Sans", Inter, system-ui, sans-serif;
+  --font-display: Figtree, Inter, system-ui, sans-serif;
+}
+.t-greeting { font-family:var(--font-display); font-size:28px; line-height:36px; font-weight:600; letter-spacing:-0.01em;}
+.t-title { font-family:var(--font-display); font-size:20px; line-height:28px; font-weight:600; }
+.t-answer-heading { font-family:var(--font-display); font-size:17px; line-height:24px; font-weight:700; }
+.t-message { font-family:var(--font-chat); font-size:15px; line-height:22px; font-weight:400; }
+.t-input { font-family:var(--font-chat); font-size:14px; line-height:20px; font-weight:400; }
+.t-footnote { font-family:var(--font-chat); font-size:11px; line-height:16px; font-weight:400; }
+.t-nav { font-family:var(--font-ui); font-size:14px; line-height:20px; font-weight:400; }
+.t-item-title { font-family:var(--font-ui); font-size:14px; line-height:20px; font-weight:500; }
+.t-meta { font-family:var(--font-ui); font-size:12px; line-height:16px; font-weight:400; }
+.t-label { font-family:var(--font-ui); font-size:12px; line-height:16px; font-weight:500; }
+.t-badge { font-family:var(--font-ui); font-size:12px; line-height:16px; font-weight:400; }
+.t-button { font-family:var(--font-ui); font-size:14px; line-height:20px; font-weight:500; }
+.t-logo { font-family:var(--font-ui); font-size:11px; line-height:14px; font-weight:700; letter-spacing:0.06em;}
+</style>
+<style id="evergpt-components">
+/* EverGPT component styles — static classes, prefix eg- */
+.eg, .eg * { box-sizing: border-box; }
+.eg { font-family: var(--font-ui); color: var(--ink); -webkit-font-smoothing: antialiased; }
+.eg-ico { width: var(--icon); height: var(--icon); fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+
+/* Logo lockup */
+.eg-logo { display: inline-flex; align-items: stretch; font: 700 11px/14px var(--font-ui); letter-spacing: .06em; }
+.eg-logo span { padding: 3px 7px; border-radius: var(--radius-sm); }
+.eg-logo .ever { background: var(--brand-tint); color: var(--brand-ink); border-radius: var(--radius-sm) 0 0 var(--radius-sm); padding-right: 9px; }
+.eg-logo .gpt { background: var(--surface); color: var(--brand-ink); border: 1.5px solid var(--brand-line); margin-left: -3px; }
+
+/* Sidebar */
+.eg-sidebar { width: var(--sidebar-width); background: var(--surface-sidebar); border-right: 1px solid var(--border); padding: var(--space-4) var(--space-3); display: flex; flex-direction: column; gap: var(--space-1); }
+.eg-nav { display: flex; align-items: center; gap: var(--space-2); height: 32px; padding: 0 var(--space-2); border-radius: var(--radius-sm); font: 400 14px/20px var(--font-ui); color: var(--ink-nav); text-decoration: none; }
+.eg-nav:hover { background: var(--surface-muted); }
+.eg-nav.is-active { background: var(--brand-tint); color: var(--brand-ink); font-weight: 500; }
+.eg-nav .chev { margin-left: auto; color: var(--ink-secondary); }
+.eg-label { font: 500 12px/16px var(--font-ui); color: var(--ink-muted); padding: var(--space-4) var(--space-2) var(--space-1); }
+.eg-user { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2); }
+.eg-avatar { width: 32px; height: 32px; border-radius: var(--radius-full); background: var(--avatar); color: var(--on-avatar); display: grid; place-items: center; font: 500 12px/1 var(--font-ui); flex: none; }
+.eg-user b { display: block; font: 600 12px/16px var(--font-ui); color: var(--ink); }
+.eg-user small { display: block; font: 400 12px/16px var(--font-ui); color: var(--ink-muted); }
+
+/* Header + model selector */
+.eg-header { height: var(--header-height); display: flex; align-items: center; gap: var(--space-3); padding: 0 var(--space-4); border-bottom: 1px solid var(--border); background: var(--surface); }
+.eg-model { display: inline-flex; align-items: center; gap: var(--space-2); height: var(--control-height); padding: 0 var(--space-3); border: 0; border-radius: var(--radius-sm); background: var(--surface-muted); font: 400 14px/20px var(--font-ui); color: var(--ink); cursor: pointer; }
+.eg-model .eg-ico { width: 14px; height: 14px; color: var(--brand-ink); }
+
+/* Messages */
+.eg-bubble { display: inline-block; max-width: 80%; background: var(--brand-soft); color: var(--ink); border-radius: var(--radius-xl); padding: var(--space-3) var(--space-4); font: 400 15px/22px var(--font-chat); }
+.eg-answer { font: 400 15px/22px var(--font-chat); color: var(--ink); }
+.eg-answer h4 { font: 700 17px/24px var(--font-display); margin: 0 0 2px; }
+.eg-answer ul { margin: 0; padding-left: 22px; }
+
+/* Asset card (in chat) */
+.eg-asset { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3) var(--space-4) var(--space-3) var(--space-3); background: var(--surface); border: 1px solid var(--border-soft); border-radius: var(--radius-lg); }
+.eg-tile { width: 36px; height: 36px; border-radius: var(--radius-md); background: var(--surface-tile); color: var(--ink-secondary); display: grid; place-items: center; flex: none; }
+.eg-asset .txt { min-width: 0; flex: 1; }
+.eg-asset .ttl { font: 500 14px/20px var(--font-ui); color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.eg-asset .sub { font: 400 12px/16px var(--font-ui); color: var(--ink-muted); }
+.eg-kebab { width: 28px; height: 28px; border: 0; background: none; border-radius: var(--radius-sm); color: var(--ink-secondary); display: grid; place-items: center; cursor: pointer; }
+.eg-kebab:hover { background: var(--surface-muted); }
+
+/* Badges */
+.eg-badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px var(--space-2); border-radius: var(--radius-xs); font: 400 12px/16px var(--font-ui); background: var(--surface-badge); color: var(--ink-secondary); border: 1px solid var(--border); white-space: nowrap; }
+.eg-badge.published { background: var(--status-published); color: var(--on-status-published); border-color: transparent; }
+.eg-badge.shared { background: var(--status-shared); color: var(--on-status-shared); border-color: transparent; }
+.eg-badge.review { background: var(--status-review); color: var(--on-status-review); border-color: transparent; }
+.eg-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+/* Buttons */
+.eg-btn { display: inline-flex; align-items: center; gap: 6px; height: var(--control-height); padding: 0 var(--space-3); border-radius: var(--radius-md); border: 1px solid transparent; font: 500 14px/20px var(--font-ui); cursor: pointer; }
+.eg-btn.primary { background: var(--brand); color: var(--on-brand); }
+.eg-btn.secondary { background: var(--surface); color: var(--ink); border-color: var(--border-control); }
+.eg-btn.ghost { background: none; color: var(--ink-secondary); }
+.eg-btn:focus-visible, .eg-chip:focus-visible, .eg-round:focus-visible, .eg-nav:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.eg-chip { display: inline-flex; align-items: center; gap: 6px; height: var(--control-height); padding: 0 var(--space-2); border: 0; border-radius: var(--radius-sm); background: var(--surface-chip); color: var(--ink); font: 400 14px/20px var(--font-chat); cursor: pointer; }
+.eg-chip.icon { width: var(--control-height); justify-content: center; padding: 0; }
+.eg-round { width: var(--icon-button); height: var(--icon-button); border: 0; border-radius: var(--radius-full); display: grid; place-items: center; cursor: pointer; }
+.eg-round.brand { background: var(--brand); color: var(--on-brand); }
+.eg-round.neutral { background: var(--surface-chip); color: var(--ink); }
+
+/* Composer */
+.eg-composer { width: 100%; max-width: var(--composer-width); background: var(--surface); border: 1px solid var(--border-control); border-radius: var(--radius-2xl); box-shadow: var(--shadow-composer); padding: var(--space-3) var(--space-3) var(--space-3) var(--space-4); }
+.eg-composer .ph { font: 400 14px/20px var(--font-chat); color: var(--ink-placeholder); padding: 2px 0 var(--space-6); }
+.eg-composer .row { display: flex; align-items: center; gap: var(--space-2); margin-left: calc(var(--space-1) * -1); }
+.eg-composer .row .end { margin-left: auto; }
+.eg-foot { font: 400 11px/16px var(--font-chat); color: var(--ink-footnote); text-align: center; }
+
+/* Panel header */
+.eg-panelhead { height: var(--header-height); display: flex; align-items: center; gap: var(--space-3); padding: 0 var(--space-4); border-bottom: 1px solid var(--border); background: var(--surface); }
+.eg-panelhead .ttl { font: 400 14px/20px var(--font-ui); color: var(--ink-secondary); flex: 1; }
+
+/* Library additions */
+.eg-search { display: flex; align-items: center; gap: var(--space-2); height: 36px; padding: 0 var(--space-3); border: 1px solid var(--border-control); border-radius: var(--radius-md); background: var(--surface); color: var(--ink-placeholder); font: 400 14px/20px var(--font-ui); }
+.eg-filter { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 var(--space-3); border-radius: var(--radius-full); border: 1px solid var(--border); background: var(--surface); font: 400 13px/18px var(--font-ui); color: var(--ink-secondary); }
+.eg-filter.on { background: var(--brand-tint); border-color: var(--brand-tint); color: var(--brand-ink); font-weight: 500; }
+.eg-filter .n { color: var(--ink-muted); font-size: 12px; }
+.eg-filter.on .n { color: var(--brand-ink); }
+.eg-lrow { display: grid; grid-template-columns: minmax(0,1fr) 176px 120px 110px 28px; align-items: center; gap: var(--space-4); padding: var(--space-3) var(--space-4) var(--space-3) var(--space-3); border-bottom: 1px solid var(--border-soft); font: 400 13px/18px var(--font-ui); color: var(--ink-secondary); }
+.eg-lrow:hover { background: var(--surface-sidebar); }
+.eg-lrow .main { display: flex; align-items: center; gap: var(--space-3); min-width: 0; }
+.eg-lrow .ttl { font: 500 14px/20px var(--font-ui); color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.eg-lrow .sub { font: 400 12px/16px var(--font-ui); color: var(--ink-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.eg-lrow .sub a { color: var(--brand-ink); text-decoration: none; }
+.eg-lhead { display: grid; grid-template-columns: minmax(0,1fr) 176px 120px 110px 28px; gap: var(--space-4); padding: var(--space-2) var(--space-4) var(--space-2) var(--space-3); font: 500 12px/16px var(--font-ui); color: var(--ink-muted); border-bottom: 1px solid var(--border); }
+.eg-people { display: flex; }
+.eg-people .eg-avatar { width: 22px; height: 22px; font-size: 9px; border: 2px solid var(--surface); margin-left: -6px; }
+.eg-people .eg-avatar:first-child { margin-left: 0; }
+</style>
+<style>
+  /* documentation page chrome — not part of the system */
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { margin:0; background:var(--surface); color:var(--ink); font-family:var(--font-ui); font-size:14px; line-height:22px; -webkit-font-smoothing:antialiased; }
+  .shell { display:grid; grid-template-columns:var(--sidebar-width) minmax(0,1fr); min-height:100vh; }
+  .side { position:sticky; top:0; height:100vh; overflow:auto; background:var(--surface-sidebar); border-right:1px solid var(--border); padding:var(--space-4) var(--space-3); }
+  .side .eg-logo { margin:0 8px 16px; }
+  .side a { display:block; padding:6px 8px; border-radius:var(--radius-sm); color:var(--ink-nav); text-decoration:none; }
+  .side a:hover { background:var(--surface-muted); }
+  .side .lbl { font:500 12px/16px var(--font-ui); color:var(--ink-muted); padding:16px 8px 4px; }
+  .side .sub a { padding-left:20px; color:var(--ink-secondary); font-size:13px; }
+  main { min-width:0; }
+  .top { height:var(--header-height); display:flex; align-items:center; padding:0 var(--space-8); border-bottom:1px solid var(--border); gap:12px; }
+  .top .eg-model { pointer-events:none; }
+  .wrap { max-width:1040px; padding:0 var(--space-8) 96px; }
+  .hero { display:grid; grid-template-columns:minmax(0,1fr) 480px; align-items:end; gap:32px; padding:48px 0 40px; border-bottom:1px solid var(--border); }
+  .hero h1 { font:600 88px/.92 var(--font-display); letter-spacing:-.03em; margin:0; }
+  .hero p { color:var(--ink-muted); margin:16px 0 0; max-width:440px; }
+  .hero svg { width:100%; height:auto; display:block; }
+  .hero .brand{fill:var(--brand)} .hero .soft{fill:var(--brand-soft)} .hero .tint{fill:var(--brand-tint)} .hero .deep{fill:var(--ink)} .hero .green{fill:var(--avatar)}
+  .hero .blk{rx:16px} .hero .bub{rx:12px} .hero .disc{rx:18px}
+  section { padding-top:56px; scroll-margin-top:8px; }
+  h2 { font:600 28px/36px var(--font-display); letter-spacing:-.01em; margin:0 0 8px; }
+  h3 { font:700 17px/24px var(--font-display); margin:24px 0 6px; }
+  p { margin:0 0 10px; max-width:72ch; }
+  ul { margin:0 0 10px; padding-left:20px; max-width:76ch; } li { margin:3px 0; }
+  code { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12px; background:var(--surface-muted); color:var(--brand-ink); padding:1px 5px; border-radius:var(--radius-xs); }
+  .intro { color:var(--ink-secondary); }
+  .swatches { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:12px 24px; margin-top:16px; }
+  .sw { display:flex; gap:12px; align-items:flex-start; }
+  .sw .chip { width:44px; height:44px; flex:none; border-radius:var(--radius-md); border:1px solid var(--border); }
+  .sw b { display:block; font-weight:600; } .sw code { background:none; padding:0; color:var(--ink-muted); }
+  .sw p { font-size:12px; line-height:16px; color:var(--ink-muted); margin:2px 0 0; }
+  .tbl { overflow-x:auto; margin-top:12px; }
+  table { border-collapse:collapse; width:100%; min-width:640px; }
+  th { text-align:left; font:500 12px/16px var(--font-ui); color:var(--ink-muted); padding:8px 12px 8px 0; border-bottom:1px solid var(--border); }
+  td { padding:12px 12px 12px 0; border-bottom:1px solid var(--border-soft); vertical-align:middle; color:var(--ink-secondary); font-size:13px; line-height:18px; }
+  td:first-child { width:1%; white-space:nowrap; }
+  .bar { display:block; height:12px; background:var(--brand); border-radius:2px; }
+  .rad { display:block; width:48px; height:32px; background:var(--brand-soft); border:1px solid var(--brand-line); }
+  .shd { display:block; width:64px; height:32px; background:var(--surface); border-radius:var(--radius-md); border:1px solid var(--border-soft); }
+  .comp { border-top:1px solid var(--border); padding:28px 0 8px; }
+  .comp header { display:flex; align-items:baseline; gap:12px; }
+  .comp header h3 { margin:0; }
+  .grp { font-size:12px; color:var(--ink-muted); }
+  .lede { color:var(--ink-secondary); margin-top:4px; }
+  .stage { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:24px; margin:12px 0 12px; overflow-x:auto; }
+  .guide ul { color:var(--ink-secondary); }
+  pre { background:var(--surface-sidebar); border:1px solid var(--border); border-radius:var(--radius-lg); padding:16px; overflow:auto; font-size:12px; line-height:18px; max-height:420px; }
+  pre code { background:none; padding:0; color:var(--ink); }
+  a:focus-visible { outline:2px solid var(--brand); outline-offset:2px; }
+  @media (max-width: 900px) {
+    .shell { grid-template-columns:1fr; } .side { display:none; }
+    .hero { grid-template-columns:1fr; } .hero h1 { font-size:64px; }
+    .wrap, .top { padding-left:20px; padding-right:20px; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+<nav class="side" aria-label="Contents">
+  <span class="eg-logo"><span class="ever">Ever</span><span class="gpt">GPT</span></span>
+  <a href="#principles">Principles</a>
+  <div class="lbl">Foundations</div>
+  <a href="#color">Colour</a><a href="#type">Type</a><a href="#spacing">Spacing &amp; radius</a><a href="#layout">Sizes &amp; elevation</a>
+  <div class="lbl">Components</div>
+  <div class="sub"><a href="#c-Logo">Logo</a><a href="#c-Sidebar">Sidebar</a><a href="#c-ModelSelector">ModelSelector</a><a href="#c-MessageBubble">MessageBubble</a><a href="#c-Composer">Composer</a><a href="#c-AssetCard">AssetCard</a><a href="#c-StatusBadge">StatusBadge</a><a href="#c-PanelHeader">PanelHeader</a><a href="#c-Button">Button</a><a href="#c-LibraryToolbar">LibraryToolbar</a><a href="#c-LibraryRow">LibraryRow</a></div>
+  <div class="lbl">Apply</div>
+  <a href="#library">Library direction</a><a href="#code">Code &amp; tokens</a>
+</nav>
+<main>
+<div class="top"><button class="eg-model" tabindex="-1">Design system</button></div>
+<div class="wrap">
+<div class="hero"><div><h1>EverGPT</h1><p>Foundever's internal assistant. White, navy and one indigo. Values sampled from the product screens.</p></div><div aria-hidden="true"><svg viewBox="0 0 480 288" width="480" height="288">
+
+<rect class="deep blk" x="320" y="-24" width="184" height="336"/>
+<rect class="brand blk" x="232" y="40" width="152" height="184"/>
+<rect class="soft bub" x="40" y="40" width="176" height="48"/>
+<rect class="tint bub" x="96" y="104" width="120" height="48"/>
+<rect class="soft bub" x="64" y="168" width="152" height="48"/>
+<rect class="tint bub" x="128" y="232" width="88" height="40"/>
+<rect class="green disc" x="252" y="236" width="36" height="36"/>
+</svg></div></div>
+
+<section id="principles"><h2>Overview</h2><p>EverGPT is Foundever&#x27;s internal assistant: a quiet, white workspace where the only colour is a single indigo action and a lavender user bubble. Build every new surface — the Library included — so it reads as the same product as the chat.</p>
+<h3>Principles</h3>
+<ul>
+<li><strong>White first, one indigo.</strong> Pages are <code>surface</code> with a <code>surface-sidebar</code> rail. <code>brand</code> appears once per view on the commit action (Publish to Web, voice). Everything else is greys and navy.</li>
+<li><strong>Navy, not black.</strong> Content text is <code>ink</code> (#0a0a30). Chrome text steps down: <code>ink-secondary</code> → <code>ink-muted</code> → <code>ink-footnote</code>.</li>
+<li><strong>Hairlines, not boxes.</strong> Structure is 1px <code>border</code> / <code>border-soft</code>. The composer is the only shadowed object (<code>shadow-composer</code>).</li>
+<li><strong>Small, calm type.</strong> 14px UI, 15px chat, 12px meta. The display face only for the greeting, page titles and answer headings.</li>
+<li><strong>One asset, one look.</strong> An asset is the same card in chat (AssetCard), in the panel header and in the Library (LibraryRow).</li>
+</ul>
+<h3>Content</h3>
+<ul>
+<li>Sentence case everywhere: &quot;New chat&quot;, &quot;Publish to Web&quot;, &quot;Design system updates&quot;. Section labels are sentence case, not caps.</li>
+<li>The assistant speaks as &quot;I&quot; (&quot;I can:&quot;); the user is addressed directly (&quot;How can I help you today?&quot;).</li>
+<li>State status in plain words beside the badge: &quot;Not published&quot;, &quot;Published · 2 days ago&quot;, &quot;Shared by Ana Petrović&quot;.</li>
+<li>No emoji in product chrome. (Generated pages may use them; the app does not.)</li>
+</ul>
+<h3>Colour</h3>
+<ul>
+<li>Canvas <code>surface</code>; rail <code>surface-sidebar</code>; header and panel rules <code>border</code>.</li>
+<li>User bubble <code>brand-soft</code>; selected nav row <code>brand-tint</code> + <code>brand-ink</code>.</li>
+<li>Neutral controls: model selector <code>surface-muted</code>; composer chips and round + <code>surface-chip</code>; asset tiles <code>surface-tile</code>.</li>
+<li>Status colours are Library additions (<code>status-*</code> / <code>on-status-*</code>); Draft stays the captured neutral.</li>
+<li><code>brand-line</code> and <code>border-control</code> are decorative strengths from the source and fail 3:1 — never use them alone to carry meaning.</li>
+</ul>
+<h3>Type</h3>
+<ul>
+<li><code>ui</code> (Inter) for chrome: sidebar, cards, badges, buttons, tables.</li>
+<li><code>chat</code> (Noto Sans) for conversation: bubbles, answers, composer, footnote.</li>
+<li><code>display</code> for <code>greeting</code>, <code>title</code>, <code>answer-heading</code>. The captured face is a geometric sans that could not be identified; Figtree stands in — swap to the official Foundever face when supplied.</li>
+</ul>
+<h3>Layout</h3>
+<ul>
+<li>Three panes: rail <code>sidebar-width</code> · chat (column max <code>composer-width</code>, centred) · optional artifact panel (≈45% width, 1px <code>border</code> left rule).</li>
+<li>Headers are <code>header-height</code> with a bottom <code>border</code> rule.</li>
+<li>Spacing steps <code>space-1</code>…<code>space-8</code>; 24px between chat turns; 16px card padding.</li>
+<li>Radii grow with size: badge <code>radius-xs</code> → chip <code>radius-sm</code> → button/tile <code>radius-md</code> → card <code>radius-lg</code> → bubble <code>radius-xl</code> → composer <code>radius-2xl</code>.</li>
+</ul>
+<h3>Iconography</h3>
+<ul>
+<li>Outline icons, 18px (<code>icon</code>), 1.5px stroke, round caps, coloured by text. The screens match Tabler Icons; the previews redraw close equivalents — use Tabler (outline) in production.</li>
+<li>Asset type icons: globe = webpage, monitor = presentation, file = report.</li>
+</ul></section>
+
+<section id="color"><h2>Colour</h2><p class="intro">One light theme, as captured. Tokens marked as Library additions are new and not present in the screens.</p><div class="swatches"><div class="sw"><span class="chip" style="background:var(--surface)"></span><div><b>surface</b><code>#ffffff</code><p>Main canvas: chat column, artifact panel, composer and asset cards.</p></div></div><div class="sw"><span class="chip" style="background:var(--surface-sidebar)"></span><div><b>surface-sidebar</b><code>#f9f9fb</code><p>Left navigation rail background (empty-state capture; the chat capture reads #fafafa).</p></div></div><div class="sw"><span class="chip" style="background:var(--surface-muted)"></span><div><b>surface-muted</b><code>#f3f2f7</code><p>Model selector (Cortex) fill and quiet hover fills on white.</p></div></div><div class="sw"><span class="chip" style="background:var(--surface-chip)"></span><div><b>surface-chip</b><code>#ecebf1</code><p>Composer chips (attach, Search) and the round + button.</p></div></div><div class="sw"><span class="chip" style="background:var(--surface-tile)"></span><div><b>surface-tile</b><code>#f2f2f2</code><p>Square icon tile at the start of an asset card.</p></div></div><div class="sw"><span class="chip" style="background:var(--surface-badge)"></span><div><b>surface-badge</b><code>#f2f2f0</code><p>Neutral status badge fill (Draft).</p></div></div><div class="sw"><span class="chip" style="background:var(--border)"></span><div><b>border</b><code>#ebebed</code><p>Sidebar divider, header rule, panel divider. 1px hairline.</p></div></div><div class="sw"><span class="chip" style="background:var(--border-soft)"></span><div><b>border-soft</b><code>#f2f2f2</code><p>Asset card outline. 1px.</p></div></div><div class="sw"><span class="chip" style="background:var(--border-control)"></span><div><b>border-control</b><code>#d8d7dc</code><p>Composer outline. Decorative (1.43:1 on surface) — the composer is also lifted by shadow-composer.</p></div></div><div class="sw"><span class="chip" style="background:var(--brand)"></span><div><b>brand</b><code>#5959eb</code><p>The one action colour: Publish to Web, mic button, links in generated pages. White text on it is 5.18:1.</p></div></div><div class="sw"><span class="chip" style="background:var(--on-brand)"></span><div><b>on-brand</b><code>#ffffff</code><p>Text and icons on brand.</p></div></div><div class="sw"><span class="chip" style="background:var(--brand-soft)"></span><div><b>brand-soft</b><code>#e4e4fe</code><p>User message bubble.</p></div></div><div class="sw"><span class="chip" style="background:var(--brand-tint)"></span><div><b>brand-tint</b><code>#eeedff</code><p>Ever half of the logo lockup; selected nav row.</p></div></div><div class="sw"><span class="chip" style="background:var(--brand-line)"></span><div><b>brand-line</b><code>#908bff</code><p>GPT outline in the logo lockup only. Decorative, 2.87:1 — never for text or meaningful borders.</p></div></div><div class="sw"><span class="chip" style="background:var(--brand-ink)"></span><div><b>brand-ink</b><code>#474397</code><p>Logo lettering and brand text on brand-tint / brand-soft (7.2:1).</p></div></div><div class="sw"><span class="chip" style="background:var(--ink)"></span><div><b>ink</b><code>#0a0a30</code><p>Deep navy: chat copy, headings, bubble text, composer chip text on surface and brand-soft.</p></div></div><div class="sw"><span class="chip" style="background:var(--ink-nav)"></span><div><b>ink-nav</b><code>#111114</code><p>Sidebar item text on surface-sidebar.</p></div></div><div class="sw"><span class="chip" style="background:var(--ink-secondary)"></span><div><b>ink-secondary</b><code>#45444a</code><p>Badge text, panel title, icon strokes on surface and surface-badge.</p></div></div><div class="sw"><span class="chip" style="background:var(--ink-muted)"></span><div><b>ink-muted</b><code>#636363</code><p>Sidebar section labels (Tools, Chats), asset subtitle (Not published), email on surface-sidebar and surface (5.7:1).</p></div></div><div class="sw"><span class="chip" style="background:var(--ink-footnote)"></span><div><b>ink-footnote</b><code>#626076</code><p>Disclaimer line under the composer, on surface (6.1:1).</p></div></div><div class="sw"><span class="chip" style="background:var(--ink-placeholder)"></span><div><b>ink-placeholder</b><code>#787586</code><p>Composer placeholder on surface. 4.48:1 as captured — just under AA; kept exact from source.</p></div></div><div class="sw"><span class="chip" style="background:var(--avatar)"></span><div><b>avatar</b><code>#aaefb9</code><p>User avatar disc in the sidebar footer.</p></div></div><div class="sw"><span class="chip" style="background:var(--on-avatar)"></span><div><b>on-avatar</b><code>#0c3b1a</code><p>Initials on avatar (9.5:1).</p></div></div><div class="sw"><span class="chip" style="background:var(--status-published)"></span><div><b>status-published</b><code>#e3f5e8</code><p>Library addition: Published badge fill. Derived from the avatar green.</p></div></div><div class="sw"><span class="chip" style="background:var(--on-status-published)"></span><div><b>on-status-published</b><code>#1b6b34</code><p>Library addition: Published badge text on status-published (5.8:1).</p></div></div><div class="sw"><span class="chip" style="background:var(--status-shared)"></span><div><b>status-shared</b><code>#e4e4fe</code><p>Library addition: Shared badge fill.</p></div></div><div class="sw"><span class="chip" style="background:var(--on-status-shared)"></span><div><b>on-status-shared</b><code>#3d3ab8</code><p>Library addition: Shared badge text on status-shared (6.7:1).</p></div></div><div class="sw"><span class="chip" style="background:var(--status-review)"></span><div><b>status-review</b><code>#fdf1d8</code><p>Library addition: Changes since publish badge fill.</p></div></div><div class="sw"><span class="chip" style="background:var(--on-status-review)"></span><div><b>on-status-review</b><code>#8a5a00</code><p>Library addition: text on status-review (5.3:1).</p></div></div></div></section>
+
+<section id="type"><h2>Type</h2><p class="intro">Inter for chrome, Noto Sans for conversation, a display face for headings (Figtree standing in for the unidentified captured face).</p><div class="tbl"><table><thead><tr><th>Sample</th><th>Style</th><th>Family</th><th>Size</th><th>Use</th></tr></thead><tbody><tr><td><span class="t-greeting" style="color:var(--ink)">How can I help you today?</span></td><td><code>greeting</code></td><td>display</td><td>28px / 36px · 600</td><td>Empty-state greeting, centred above the composer, in ink.</td></tr><tr><td><span class="t-title" style="color:var(--ink)">Library</span></td><td><code>title</code></td><td>display</td><td>20px / 28px · 600</td><td>Page titles (Library header).</td></tr><tr><td><span class="t-answer-heading" style="color:var(--ink)">Want to push it even further?</span></td><td><code>answer-heading</code></td><td>display</td><td>17px / 24px · 700</td><td>Headings inside assistant answers.</td></tr><tr><td><span class="t-message" style="color:var(--ink)">Create webpage about sales at foundever</span></td><td><code>message</code></td><td>chat</td><td>15px / 22px · 400</td><td>User bubbles and assistant prose.</td></tr><tr><td><span class="t-input" style="color:var(--ink)">Ask me anything</span></td><td><code>input</code></td><td>chat</td><td>14px / 20px · 400</td><td>Composer text and placeholder; composer chips.</td></tr><tr><td><span class="t-footnote" style="color:var(--ink)">EverGPT may make mistakes, so double-check important information.</span></td><td><code>footnote</code></td><td>chat</td><td>11px / 16px · 400</td><td>Disclaimer under the composer, centred, ink-footnote.</td></tr><tr><td><span class="t-nav" style="color:var(--ink)">Design system updates</span></td><td><code>nav</code></td><td>ui</td><td>14px / 20px · 400</td><td>Sidebar items and chat titles.</td></tr><tr><td><span class="t-item-title" style="color:var(--ink)">Sales</span></td><td><code>item-title</code></td><td>ui</td><td>14px / 20px · 500</td><td>Asset card / Library row title.</td></tr><tr><td><span class="t-meta" style="color:var(--ink)">Not published</span></td><td><code>meta</code></td><td>ui</td><td>12px / 16px · 400</td><td>Asset subtitle, email, timestamps.</td></tr><tr><td><span class="t-label" style="color:var(--ink)">Chats</span></td><td><code>label</code></td><td>ui</td><td>12px / 16px · 500</td><td>Sidebar section labels in ink-muted; sentence case, not caps.</td></tr><tr><td><span class="t-badge" style="color:var(--ink)">Draft</span></td><td><code>badge</code></td><td>ui</td><td>12px / 16px · 400</td><td>Status badges.</td></tr><tr><td><span class="t-button" style="color:var(--ink)">Publish to Web</span></td><td><code>button</code></td><td>ui</td><td>14px / 20px · 500</td><td>Buttons.</td></tr><tr><td><span class="t-logo" style="color:var(--ink)">Ever GPT</span></td><td><code>logo</code></td><td>ui</td><td>11px / 14px · 700</td><td>Logo lockup only.</td></tr></tbody></table></div></section>
+
+<section id="spacing"><h2>Spacing &amp; radius</h2><div class="tbl"><table><thead><tr><th></th><th>Token</th><th>Value</th><th>Use</th></tr></thead><tbody><tr><td><span class="bar" style="width:4px"></span></td><td><code>space-1</code></td><td><code>4px</code></td><td>Icon-to-label nudge, badge vertical padding.</td></tr><tr><td><span class="bar" style="width:8px"></span></td><td><code>space-2</code></td><td><code>8px</code></td><td>Gap between composer chips; badge horizontal padding; icon gap in nav.</td></tr><tr><td><span class="bar" style="width:12px"></span></td><td><code>space-3</code></td><td><code>12px</code></td><td>Bubble vertical padding; card inner gap; nav row horizontal padding.</td></tr><tr><td><span class="bar" style="width:16px"></span></td><td><code>space-4</code></td><td><code>16px</code></td><td>Card padding; composer padding; sidebar inset.</td></tr><tr><td><span class="bar" style="width:24px"></span></td><td><code>space-6</code></td><td><code>24px</code></td><td>Gap between messages; between sidebar groups.</td></tr><tr><td><span class="bar" style="width:32px"></span></td><td><code>space-8</code></td><td><code>32px</code></td><td>Page gutters in the Library.</td></tr><tr><td><span class="rad" style="border-radius:4px"></span></td><td><code>radius-xs</code></td><td><code>4px</code></td><td>Status badges.</td></tr><tr><td><span class="rad" style="border-radius:6px"></span></td><td><code>radius-sm</code></td><td><code>6px</code></td><td>Model selector, composer chips, nav row hover, logo halves.</td></tr><tr><td><span class="rad" style="border-radius:8px"></span></td><td><code>radius-md</code></td><td><code>8px</code></td><td>Buttons (Publish to Web), icon tiles.</td></tr><tr><td><span class="rad" style="border-radius:10px"></span></td><td><code>radius-lg</code></td><td><code>10px</code></td><td>Asset cards and Library rows.</td></tr><tr><td><span class="rad" style="border-radius:12px"></span></td><td><code>radius-xl</code></td><td><code>12px</code></td><td>User message bubble.</td></tr><tr><td><span class="rad" style="border-radius:16px"></span></td><td><code>radius-2xl</code></td><td><code>16px</code></td><td>Composer.</td></tr><tr><td><span class="rad" style="border-radius:9999px"></span></td><td><code>radius-full</code></td><td><code>9999px</code></td><td>Mic button, + button, avatar.</td></tr></tbody></table></div></section>
+
+<section id="layout"><h2>Sizes &amp; elevation</h2><div class="tbl"><table><thead><tr><th></th><th>Token</th><th>Value</th><th>Use</th></tr></thead><tbody><tr><td></td><td><code>sidebar-width</code></td><td><code>252px</code></td><td>Left rail.</td></tr><tr><td></td><td><code>header-height</code></td><td><code>64px</code></td><td>Chat header and artifact panel header.</td></tr><tr><td></td><td><code>composer-width</code></td><td><code>560px</code></td><td>Max width of the composer and the chat column.</td></tr><tr><td></td><td><code>control-height</code></td><td><code>32px</code></td><td>Model selector, chips, primary button.</td></tr><tr><td></td><td><code>icon-button</code></td><td><code>36px</code></td><td>Mic and + round buttons.</td></tr><tr><td></td><td><code>icon</code></td><td><code>18px</code></td><td>Outline icons, 1.5px stroke.</td></tr><tr><td><span class="shd" style="box-shadow:0 6px 20px rgba(20, 18, 60, 0.08)"></span></td><td><code>shadow-composer</code></td><td><code>0 6px 20px rgba(20, 18, 60, 0.08)</code></td><td>Composer only — the single elevated surface on the page.</td></tr><tr><td><span class="shd" style="box-shadow:0 8px 24px rgba(20, 18, 60, 0.12)"></span></td><td><code>shadow-menu</code></td><td><code>0 8px 24px rgba(20, 18, 60, 0.12)</code></td><td>Overflow (⋮) menus and popovers.</td></tr></tbody></table></div></section>
+
+<section id="components"><h2>Components</h2><p class="intro">Recreated from the screens. LibraryToolbar, LibraryRow and the extra badge states are Library additions.</p><article class="comp" id="c-Logo"><header><h3>Logo</h3><span class="grp">Brand</span></header><p class="lede">The EverGPT lockup sits top-left of the sidebar: &quot;Ever&quot; on a <code>brand-tint</code> half, &quot;GPT&quot; in a <code>brand-line</code> outlined half, both lettered in <code>brand-ink</code>.</p>
+<div class="stage eg" style=""><div style="display:flex;gap:24px;align-items:center"><span class="eg-logo"><span class="ever">Ever</span><span class="gpt">GPT</span></span><span style="display:inline-block;background:var(--surface-sidebar);padding:12px"><span class="eg-logo"><span class="ever">Ever</span><span class="gpt">GPT</span></span></span></div></div><div class="guide"><ul>
+<li>Recreated in type from the screenshots — no vector source was supplied. Replace with the official SVG when available; do not redraw it.</li>
+<li>Use only at the top of the sidebar, 16px from the top and left edges. Never recolour, never place on <code>brand</code>.</li>
+</ul></div></article>
+<article class="comp" id="c-Sidebar"><header><h3>Sidebar</h3><span class="grp">Navigation</span></header><p class="lede">The left rail: logo, New chat, section labels (Tools, Chats), recent chats and the signed-in user pinned to the bottom.</p>
+<div class="stage eg" style="padding:0"><div class="eg-sidebar" style="height:440px">
+<div style="padding:0 8px 12px"><span class="eg-logo"><span class="ever">Ever</span><span class="gpt">GPT</span></span></div>
+<a class="eg-nav" href="#"><svg class="eg-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-1"/><path d="M20.4 6.6a2.1 2.1 0 0 0-3-3L9 12v3h3z"/><path d="M16 5l3 3"/></svg>New chat</a>
+<div class="eg-label">Tools</div>
+<a class="eg-nav" href="#"><svg class="eg-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l4 7H8z"/><circle cx="7" cy="17" r="3.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1"/></svg>GPTs<svg class="eg-ico chev" viewBox="0 0 24 24" style="width:16px;height:16px" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
+<a class="eg-nav is-active" href="#"><svg class="eg-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 9h16M9 9v11"/></svg>Library</a>
+<div class="eg-label">Chats</div>
+<a class="eg-nav" href="#">OKRs review</a>
+<a class="eg-nav" href="#">Design system updates</a>
+<div style="flex:1"></div>
+<div class="eg-user"><span class="eg-avatar">RB</span><span><b>Randy Bell</b><small>randy.bell@foundever.com</small></span></div>
+</div></div><div class="guide"><ul>
+<li>Width <code>sidebar-width</code>, fill <code>surface-sidebar</code>, right hairline <code>border</code>.</li>
+<li>Rows use <code>nav</code> on <code>ink-nav</code>, 32px tall, <code>radius-sm</code> hover in <code>surface-muted</code>. Icons 18px outline, 1.5 stroke, text-colour.</li>
+<li>Section labels use <code>label</code> in <code>ink-muted</code>, sentence case (&quot;Chats&quot;, never &quot;CHATS&quot;).</li>
+<li><strong>Library entry (addition):</strong> add *Library* under Tools, after GPTs. Its active state is <code>brand-tint</code> with <code>brand-ink</code> text — the only filled row in the rail.</li>
+<li>User footer: 32px <code>avatar</code> disc with initials in <code>on-avatar</code>, name 12px semibold <code>ink</code>, email <code>meta</code> in <code>ink-muted</code>.</li>
+</ul></div></article>
+<article class="comp" id="c-ModelSelector"><header><h3>ModelSelector</h3><span class="grp">Navigation</span></header><p class="lede">The model picker (&quot;Cortex&quot;) at the left of the chat header.</p>
+<div class="stage eg" style=""><button class="eg-model">Cortex<svg class="eg-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></div><div class="guide"><ul>
+<li><code>surface-muted</code> fill, no border, <code>radius-sm</code>, <code>control-height</code>, label <code>nav</code> in <code>ink</code>, chevron in <code>brand-ink</code>.</li>
+</ul></div></article>
+<article class="comp" id="c-MessageBubble"><header><h3>MessageBubble</h3><span class="grp">Chat</span></header><p class="lede">User turns are right-aligned <code>brand-soft</code> bubbles; assistant turns are unboxed prose.</p>
+<div class="stage eg" style=""><div style="display:flex;flex-direction:column;gap:24px;max-width:560px"><div style="text-align:right"><span class="eg-bubble">Create webpage about sales at foundever</span></div>
+<div class="eg-answer"><h4>Want to push it even further?</h4>I can:<ul><li>Add animated counters on the stat cards</li><li>Drop in a Mermaid diagram for the sales process flow</li></ul></div></div></div><div class="guide"><ul>
+<li>Bubble: <code>radius-xl</code>, padding <code>space-3</code> × <code>space-4</code>, text <code>message</code> in <code>ink</code>.</li>
+<li>Assistant: <code>message</code> in <code>ink</code>; headings <code>answer-heading</code> (display face, bold). Bulleted suggestions are plain lists — no cards, no chips.</li>
+<li><code>space-6</code> between turns.</li>
+</ul></div></article>
+<article class="comp" id="c-Composer"><header><h3>Composer</h3><span class="grp">Chat</span></header><p class="lede">The prompt box. Two states from the screens: empty-state (Attach + Search chips) and in-chat (round +).</p>
+<div class="stage eg" style=""><div style="display:flex;flex-direction:column;gap:20px;align-items:center;padding:8px 0"><div style="font:600 28px/36px var(--font-display);color:var(--ink);letter-spacing:-.01em">How can I help you today?</div><div class="eg-composer"><div class="ph">Ask me anything</div><div class="row"><button class="eg-chip icon" aria-label="Attach"><svg class="eg-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 7l-6.5 6.5a1.5 1.5 0 0 0 3 3L18 10a3 3 0 0 0-6-6l-6.5 6.5a4.5 4.5 0 0 0 9 9L21 13"/></svg></button><button class="eg-chip"><svg class="eg-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8M3.6 15h16.8M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>Search</button><span class="end"><button class="eg-round brand" aria-label="Voice"><svg class="eg-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button></span></div></div><div class="eg-composer"><div class="ph">Ask me anything</div><div class="row"><button class="eg-round neutral" aria-label="Add"><svg class="eg-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button><span class="end"><button class="eg-round brand" aria-label="Voice"><svg class="eg-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button></span></div></div><div class="eg-foot">Ensure your questions follow Foundever's security terms for a safe, productive workspace.<br>EverGPT may make mistakes, so double-check important information.</div></div></div><div class="guide"><ul>
+<li><code>surface</code>, 1px <code>border-control</code>, <code>radius-2xl</code>, <code>shadow-composer</code>, max <code>composer-width</code>.</li>
+<li>Placeholder &quot;Ask me anything&quot; in <code>input</code> / <code>ink-placeholder</code> (4.48:1 as captured — flag before shipping).</li>
+<li>Empty state: greeting &quot;How can I help you today?&quot; in <code>greeting</code>, centred, 20px above.</li>
+<li>Footnote in <code>footnote</code> / <code>ink-footnote</code>, centred, two lines, 12px below.</li>
+</ul></div></article>
+<article class="comp" id="c-AssetCard"><header><h3>AssetCard</h3><span class="grp">Assets</span></header><p class="lede">The inline card an assistant turn produces when it creates an asset (webpage, report, deck). Clicking it opens the asset in the right-hand panel.</p>
+<div class="stage eg" style=""><div style="display:flex;flex-direction:column;gap:12px;max-width:560px"><div class="eg-asset"><span class="eg-tile"><svg class="eg-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8M3.6 15h16.8M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg></span><div class="txt"><div class="ttl">Sales</div><div class="sub">Not published</div></div><span class="eg-badge">Draft</span><button class="eg-kebab" aria-label="More"><svg class="eg-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg></button></div><div class="eg-asset"><span class="eg-tile"><svg class="eg-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M12 16v4M8 20h8"/></svg></span><div class="txt"><div class="ttl">Q3 OKRs review</div><div class="sub">Published · 2 days ago</div></div><span class="eg-badge published"><span class="dot"></span>Published</span><button class="eg-kebab" aria-label="More"><svg class="eg-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg></button></div><div class="eg-asset"><span class="eg-tile"><svg class="eg-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/><path d="M9 13h6M9 17h4"/></svg></span><div class="txt"><div class="ttl">Design system update notes</div><div class="sub">Shared by Ana Petrović</div></div><span class="eg-badge shared">Shared</span><button class="eg-kebab" aria-label="More"><svg class="eg-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg></button></div></div></div><div class="guide"><ul>
+<li><code>surface</code>, 1px <code>border-soft</code>, <code>radius-lg</code>; padding <code>space-3</code> (left) / <code>space-4</code> (right).</li>
+<li>Leading 36px <code>eg-tile</code> (<code>surface-tile</code>, <code>radius-md</code>) holding the type icon: globe = webpage, monitor = presentation, file = report/doc.</li>
+<li>Title <code>item-title</code> <code>ink</code>; subtitle <code>meta</code> <code>ink-muted</code> states publication in words (&quot;Not published&quot;, &quot;Published · 2 days ago&quot;).</li>
+<li>Trailing: one StatusBadge, then the ⋮ overflow (<code>eg-kebab</code>).</li>
+<li>The same card is the base unit of the Library list (see LibraryRow) so an asset looks identical in chat and in the Library.</li>
+</ul></div></article>
+<article class="comp" id="c-StatusBadge"><header><h3>StatusBadge</h3><span class="grp">Assets</span></header><p class="lede">Small rectangular label for an asset&#x27;s state.</p>
+<div class="stage eg" style=""><div style="display:flex;gap:8px;flex-wrap:wrap"><span class="eg-badge">Draft</span><span class="eg-badge published"><span class="dot"></span>Published</span><span class="eg-badge review"><span class="dot"></span>Unpublished changes</span><span class="eg-badge shared">Shared</span></div></div><div class="guide"><ul>
+<li>Draft (as captured): <code>surface-badge</code> fill, 1px <code>border</code>, <code>ink-secondary</code> text, <code>radius-xs</code>, <code>badge</code> style.</li>
+<li><strong>Additions for the Library</strong>, same shape: Published (<code>status-published</code> / <code>on-status-published</code>, with a dot), Unpublished changes (<code>status-review</code> / <code>on-status-review</code>, with a dot), Shared (<code>status-shared</code> / <code>on-status-shared</code>).</li>
+<li>Status is always a word; colour only reinforces it. Show at most one lifecycle badge (Draft / Published / Unpublished changes) plus optionally Shared.</li>
+</ul></div></article>
+<article class="comp" id="c-PanelHeader"><header><h3>PanelHeader</h3><span class="grp">Assets</span></header><p class="lede">Header of the right-hand artifact preview panel.</p>
+<div class="stage eg" style=""><div class="eg-panelhead" style="border:1px solid var(--border)"><button class="eg-kebab" aria-label="Close"><svg class="eg-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg></button><span class="ttl">sales</span><button class="eg-btn primary">Publish to Web</button></div></div><div class="guide"><ul>
+<li><code>header-height</code>, bottom hairline <code>border</code>, panel divided from chat by a 1px <code>border</code> line.</li>
+<li>Close (×) ghost icon button, asset title in <code>nav</code> / <code>ink-secondary</code>, primary action right-aligned.</li>
+<li>When an asset is already published, the primary becomes &quot;Update&quot; and a secondary &quot;Copy link&quot; sits before it.</li>
+</ul></div></article>
+<article class="comp" id="c-Button"><header><h3>Button</h3><span class="grp">Actions</span></header><p class="lede">Buttons, chips and round icon buttons.</p>
+<div class="stage eg" style=""><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><button class="eg-btn primary">Publish to Web</button><button class="eg-btn secondary">Open chat</button><button class="eg-chip icon" aria-label="Attach"><svg class="eg-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 7l-6.5 6.5a1.5 1.5 0 0 0 3 3L18 10a3 3 0 0 0-6-6l-6.5 6.5a4.5 4.5 0 0 0 9 9L21 13"/></svg></button><button class="eg-chip"><svg class="eg-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8M3.6 15h16.8M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>Search</button><button class="eg-round neutral" aria-label="Add"><svg class="eg-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button><button class="eg-round brand" aria-label="Voice"><svg class="eg-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button></div></div><div class="guide"><ul>
+<li><strong>Primary</strong> (<code>Publish to Web</code>): <code>brand</code> fill, <code>on-brand</code> text, <code>radius-md</code>, <code>control-height</code>. One per view — it is the commit action.</li>
+<li><strong>Secondary</strong> (addition): <code>surface</code> with <code>border-control</code> outline, <code>ink</code> text. For &quot;Open chat&quot;, &quot;Copy link&quot;.</li>
+<li><strong>Chip</strong> (composer Attach/Search): <code>surface-chip</code>, <code>radius-sm</code>, <code>input</code> style in <code>ink</code>.</li>
+<li><strong>Round</strong>: <code>icon-button</code> circles — neutral <code>+</code> on <code>surface-chip</code>, voice on <code>brand</code>.</li>
+<li>Focus: 2px <code>brand</code> ring offset 2px.</li>
+</ul></div></article>
+<article class="comp" id="c-LibraryToolbar"><header><h3>LibraryToolbar</h3><span class="grp">Library</span></header><p class="lede">Library addition. Page title, search and filter pills above the list.</p>
+<div class="stage eg" style=""><div style="display:flex;flex-direction:column;gap:16px;max-width:820px"><div style="display:flex;justify-content:space-between;align-items:center"><div style="font:600 20px/28px var(--font-display)">Library</div><div class="eg-search" style="width:280px"><svg class="eg-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="M21 21l-6-6"/></svg>Search assets</div></div><div style="display:flex;gap:8px;flex-wrap:wrap"><span class="eg-filter on">All <span class="n">24</span></span><span class="eg-filter">Created by me <span class="n">15</span></span><span class="eg-filter">Shared with me <span class="n">9</span></span><span style="width:1px;background:var(--border);margin:0 4px"></span><span class="eg-filter">Drafts <span class="n">7</span></span><span class="eg-filter">Published <span class="n">12</span></span><span class="eg-filter">Webpages</span><span class="eg-filter">Presentations</span><span class="eg-filter">Reports</span></div></div></div><div class="guide"><ul>
+<li>Title in <code>title</code> (display face). Search field 36px, <code>border-control</code>, <code>radius-md</code>, placeholder <code>ink-placeholder</code>.</li>
+<li>Filter pills: 28px, <code>radius-full</code>, 1px <code>border</code>; selected = <code>brand-tint</code> / <code>brand-ink</code>. Counts in <code>ink-muted</code>.</li>
+<li>Order: ownership (All · Created by me · Shared with me), a hairline, then status, then type.</li>
+</ul></div></article>
+<article class="comp" id="c-LibraryRow"><header><h3>LibraryRow</h3><span class="grp">Library</span></header><p class="lede">Library addition. One asset per row in the Library list — the in-chat AssetCard stretched into columns.</p>
+<div class="stage eg" style=""><div class="eg-lhead"><span>Name</span><span>Status</span><span>Updated</span><span>Access</span><span></span></div><div class="eg-lrow"><div class="main"><span class="eg-tile"><svg class="eg-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8M3.6 15h16.8M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg></span><div style="min-width:0"><div class="ttl">Sales enablement page</div><div class="sub">Webpage · from <a href="#">Create webpage about sales…</a></div></div></div><span><span class="eg-badge">Draft</span></span><span>Today, 10:42</span><span class="eg-people"><span class="eg-avatar">RB</span></span><button class="eg-kebab" aria-label="More"><svg class="eg-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg></button></div><div class="eg-lrow"><div class="main"><span class="eg-tile"><svg class="eg-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M12 16v4M8 20h8"/></svg></span><div style="min-width:0"><div class="ttl">Q3 OKRs review</div><div class="sub">Presentation · from <a href="#">OKRs review</a></div></div></div><span><span class="eg-badge published"><span class="dot"></span>Published</span></span><span>2 days ago</span><span class="eg-people"><span class="eg-avatar">RB</span><span class="eg-avatar">AP</span></span><button class="eg-kebab" aria-label="More"><svg class="eg-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg></button></div><div class="eg-lrow"><div class="main"><span class="eg-tile"><svg class="eg-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/><path d="M9 13h6M9 17h4"/></svg></span><div style="min-width:0"><div class="ttl">Design system update notes</div><div class="sub">Report · shared by Ana Petrović</div></div></div><span><span class="eg-badge review"><span class="dot"></span>Unpublished changes</span></span><span>Sep 28</span><span class="eg-people"><span class="eg-avatar">AP</span><span class="eg-avatar">RB</span><span class="eg-avatar">MK</span></span><button class="eg-kebab" aria-label="More"><svg class="eg-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg></button></div></div><div class="guide"><ul>
+<li>Columns: Name (tile + title + provenance line) · Status · Updated · Access · ⋮.</li>
+<li>Provenance line in <code>meta</code> / <code>ink-muted</code>: type, then the source chat as a <code>brand-ink</code> link (&quot;from OKRs review&quot;) or who shared it.</li>
+<li>Row: <code>space-3</code> vertical padding, 1px <code>border-soft</code> divider, hover <code>surface-sidebar</code>. Column headers <code>label</code> / <code>ink-muted</code> over a <code>border</code> rule.</li>
+<li>Access shows up to three 22px avatars; overflow as &quot;+n&quot;.</li>
+</ul></div></article>
+</section>
+
+<section id="library"><h2>Library direction</h2><p>How the Library applies this system. It is a page in the same shell — sidebar left, content right, no artifact panel until an asset is opened.</p>
+<h3>Entry</h3>
+<ul>
+<li>Add <strong>Library</strong> to the sidebar under Tools, after GPTs. Active state <code>brand-tint</code> / <code>brand-ink</code>.</li>
+<li>Every in-chat AssetCard&#x27;s ⋮ gets &quot;Show in Library&quot;; the panel header gets the same.</li>
+</ul>
+<h3>Page</h3>
+<ul>
+<li>Header <code>header-height</code> with <code>title</code> &quot;Library&quot; left, search (LibraryToolbar) right.</li>
+<li>Filter pills below: All · Created by me · Shared with me | Drafts · Published · type.</li>
+<li>List of LibraryRow, columns Name · Status · Updated · Access · ⋮. Default sort: last updated.</li>
+<li>Each row&#x27;s provenance line links back to its source chat — the asset never loses where it came from.</li>
+</ul>
+<h3>Opening an asset</h3>
+<ul>
+<li>Clicking a row opens the existing artifact panel (PanelHeader + preview) over the right of the Library, exactly as in chat; primary action follows status: Draft → &quot;Publish to Web&quot;, Published → &quot;Copy link&quot;, Unpublished changes → &quot;Update&quot;.</li>
+<li>⋮ menu (<code>shadow-menu</code>, <code>radius-lg</code>): Open · Open source chat · Share · Copy link · Rename · Archive.</li>
+</ul>
+<h3>Empty and edge states</h3>
+<ul>
+<li>No assets: centred <code>greeting</code>-style line &quot;Assets you create in chats show up here&quot;, with a secondary &quot;New chat&quot; button.</li>
+<li>No results: &quot;No assets match &quot;…&quot;&quot; and a Clear filters link in <code>brand-ink</code>.</li>
+<li>Source chat deleted: provenance reads &quot;Source chat deleted&quot; in <code>ink-muted</code>, no link.</li>
+</ul></section>
+
+<section id="code"><h2>Code &amp; tokens</h2><p class="intro">Copy these into a project. The same CSS is live in this file's <code>evergpt-tokens</code> and <code>evergpt-components</code> style blocks; the JSON is in <code>evergpt-tokens-json</code>.</p>
+<h3>CSS custom properties</h3><pre><code>:root {
+  --surface: #ffffff;
+  --surface-sidebar: #f9f9fb;
+  --surface-muted: #f3f2f7;
+  --surface-chip: #ecebf1;
+  --surface-tile: #f2f2f2;
+  --surface-badge: #f2f2f0;
+  --border: #ebebed;
+  --border-soft: #f2f2f2;
+  --border-control: #d8d7dc;
+  --brand: #5959eb;
+  --on-brand: #ffffff;
+  --brand-soft: #e4e4fe;
+  --brand-tint: #eeedff;
+  --brand-line: #908bff;
+  --brand-ink: #474397;
+  --ink: #0a0a30;
+  --ink-nav: #111114;
+  --ink-secondary: #45444a;
+  --ink-muted: #636363;
+  --ink-footnote: #626076;
+  --ink-placeholder: #787586;
+  --avatar: #aaefb9;
+  --on-avatar: #0c3b1a;
+  --status-published: #e3f5e8;
+  --on-status-published: #1b6b34;
+  --status-shared: var(--brand-soft);
+  --on-status-shared: #3d3ab8;
+  --status-review: #fdf1d8;
+  --on-status-review: #8a5a00;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-full: 9999px;
+  --shadow-composer: 0 6px 20px rgba(20, 18, 60, 0.08);
+  --shadow-menu: 0 8px 24px rgba(20, 18, 60, 0.12);
+  --sidebar-width: 252px;
+  --header-height: 64px;
+  --composer-width: 560px;
+  --control-height: 32px;
+  --icon-button: 36px;
+  --icon: 18px;
+  --font-ui: Inter, system-ui, -apple-system, Segoe UI, sans-serif;
+  --font-chat: &quot;Noto Sans&quot;, Inter, system-ui, sans-serif;
+  --font-display: Figtree, Inter, system-ui, sans-serif;
+}
+.t-greeting { font-family:var(--font-display); font-size:28px; line-height:36px; font-weight:600; letter-spacing:-0.01em;}
+.t-title { font-family:var(--font-display); font-size:20px; line-height:28px; font-weight:600; }
+.t-answer-heading { font-family:var(--font-display); font-size:17px; line-height:24px; font-weight:700; }
+.t-message { font-family:var(--font-chat); font-size:15px; line-height:22px; font-weight:400; }
+.t-input { font-family:var(--font-chat); font-size:14px; line-height:20px; font-weight:400; }
+.t-footnote { font-family:var(--font-chat); font-size:11px; line-height:16px; font-weight:400; }
+.t-nav { font-family:var(--font-ui); font-size:14px; line-height:20px; font-weight:400; }
+.t-item-title { font-family:var(--font-ui); font-size:14px; line-height:20px; font-weight:500; }
+.t-meta { font-family:var(--font-ui); font-size:12px; line-height:16px; font-weight:400; }
+.t-label { font-family:var(--font-ui); font-size:12px; line-height:16px; font-weight:500; }
+.t-badge { font-family:var(--font-ui); font-size:12px; line-height:16px; font-weight:400; }
+.t-button { font-family:var(--font-ui); font-size:14px; line-height:20px; font-weight:500; }
+.t-logo { font-family:var(--font-ui); font-size:11px; line-height:14px; font-weight:700; letter-spacing:0.06em;}
+</code></pre>
+<h3>Component classes</h3><pre><code>/* EverGPT component styles — static classes, prefix eg- */
+.eg, .eg * { box-sizing: border-box; }
+.eg { font-family: var(--font-ui); color: var(--ink); -webkit-font-smoothing: antialiased; }
+.eg-ico { width: var(--icon); height: var(--icon); fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+
+/* Logo lockup */
+.eg-logo { display: inline-flex; align-items: stretch; font: 700 11px/14px var(--font-ui); letter-spacing: .06em; }
+.eg-logo span { padding: 3px 7px; border-radius: var(--radius-sm); }
+.eg-logo .ever { background: var(--brand-tint); color: var(--brand-ink); border-radius: var(--radius-sm) 0 0 var(--radius-sm); padding-right: 9px; }
+.eg-logo .gpt { background: var(--surface); color: var(--brand-ink); border: 1.5px solid var(--brand-line); margin-left: -3px; }
+
+/* Sidebar */
+.eg-sidebar { width: var(--sidebar-width); background: var(--surface-sidebar); border-right: 1px solid var(--border); padding: var(--space-4) var(--space-3); display: flex; flex-direction: column; gap: var(--space-1); }
+.eg-nav { display: flex; align-items: center; gap: var(--space-2); height: 32px; padding: 0 var(--space-2); border-radius: var(--radius-sm); font: 400 14px/20px var(--font-ui); color: var(--ink-nav); text-decoration: none; }
+.eg-nav:hover { background: var(--surface-muted); }
+.eg-nav.is-active { background: var(--brand-tint); color: var(--brand-ink); font-weight: 500; }
+.eg-nav .chev { margin-left: auto; color: var(--ink-secondary); }
+.eg-label { font: 500 12px/16px var(--font-ui); color: var(--ink-muted); padding: var(--space-4) var(--space-2) var(--space-1); }
+.eg-user { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2); }
+.eg-avatar { width: 32px; height: 32px; border-radius: var(--radius-full); background: var(--avatar); color: var(--on-avatar); display: grid; place-items: center; font: 500 12px/1 var(--font-ui); flex: none; }
+.eg-user b { display: block; font: 600 12px/16px var(--font-ui); color: var(--ink); }
+.eg-user small { display: block; font: 400 12px/16px var(--font-ui); color: var(--ink-muted); }
+
+/* Header + model selector */
+.eg-header { height: var(--header-height); display: flex; align-items: center; gap: var(--space-3); padding: 0 var(--space-4); border-bottom: 1px solid var(--border); background: var(--surface); }
+.eg-model { display: inline-flex; align-items: center; gap: var(--space-2); height: var(--control-height); padding: 0 var(--space-3); border: 0; border-radius: var(--radius-sm); background: var(--surface-muted); font: 400 14px/20px var(--font-ui); color: var(--ink); cursor: pointer; }
+.eg-model .eg-ico { width: 14px; height: 14px; color: var(--brand-ink); }
+
+/* Messages */
+.eg-bubble { display: inline-block; max-width: 80%; background: var(--brand-soft); color: var(--ink); border-radius: var(--radius-xl); padding: var(--space-3) var(--space-4); font: 400 15px/22px var(--font-chat); }
+.eg-answer { font: 400 15px/22px var(--font-chat); color: var(--ink); }
+.eg-answer h4 { font: 700 17px/24px var(--font-display); margin: 0 0 2px; }
+.eg-answer ul { margin: 0; padding-left: 22px; }
+
+/* Asset card (in chat) */
+.eg-asset { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3) var(--space-4) var(--space-3) var(--space-3); background: var(--surface); border: 1px solid var(--border-soft); border-radius: var(--radius-lg); }
+.eg-tile { width: 36px; height: 36px; border-radius: var(--radius-md); background: var(--surface-tile); color: var(--ink-secondary); display: grid; place-items: center; flex: none; }
+.eg-asset .txt { min-width: 0; flex: 1; }
+.eg-asset .ttl { font: 500 14px/20px var(--font-ui); color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.eg-asset .sub { font: 400 12px/16px var(--font-ui); color: var(--ink-muted); }
+.eg-kebab { width: 28px; height: 28px; border: 0; background: none; border-radius: var(--radius-sm); color: var(--ink-secondary); display: grid; place-items: center; cursor: pointer; }
+.eg-kebab:hover { background: var(--surface-muted); }
+
+/* Badges */
+.eg-badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px var(--space-2); border-radius: var(--radius-xs); font: 400 12px/16px var(--font-ui); background: var(--surface-badge); color: var(--ink-secondary); border: 1px solid var(--border); white-space: nowrap; }
+.eg-badge.published { background: var(--status-published); color: var(--on-status-published); border-color: transparent; }
+.eg-badge.shared { background: var(--status-shared); color: var(--on-status-shared); border-color: transparent; }
+.eg-badge.review { background: var(--status-review); color: var(--on-status-review); border-color: transparent; }
+.eg-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+/* Buttons */
+.eg-btn { display: inline-flex; align-items: center; gap: 6px; height: var(--control-height); padding: 0 var(--space-3); border-radius: var(--radius-md); border: 1px solid transparent; font: 500 14px/20px var(--font-ui); cursor: pointer; }
+.eg-btn.primary { background: var(--brand); color: var(--on-brand); }
+.eg-btn.secondary { background: var(--surface); color: var(--ink); border-color: var(--border-control); }
+.eg-btn.ghost { background: none; color: var(--ink-secondary); }
+.eg-btn:focus-visible, .eg-chip:focus-visible, .eg-round:focus-visible, .eg-nav:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.eg-chip { display: inline-flex; align-items: center; gap: 6px; height: var(--control-height); padding: 0 var(--space-2); border: 0; border-radius: var(--radius-sm); background: var(--surface-chip); color: var(--ink); font: 400 14px/20px var(--font-chat); cursor: pointer; }
+.eg-chip.icon { width: var(--control-height); justify-content: center; padding: 0; }
+.eg-round { width: var(--icon-button); height: var(--icon-button); border: 0; border-radius: var(--radius-full); display: grid; place-items: center; cursor: pointer; }
+.eg-round.brand { background: var(--brand); color: var(--on-brand); }
+.eg-round.neutral { background: var(--surface-chip); color: var(--ink); }
+
+/* Composer */
+.eg-composer { width: 100%; max-width: var(--composer-width); background: var(--surface); border: 1px solid var(--border-control); border-radius: var(--radius-2xl); box-shadow: var(--shadow-composer); padding: var(--space-3) var(--space-3) var(--space-3) var(--space-4); }
+.eg-composer .ph { font: 400 14px/20px var(--font-chat); color: var(--ink-placeholder); padding: 2px 0 var(--space-6); }
+.eg-composer .row { display: flex; align-items: center; gap: var(--space-2); margin-left: calc(var(--space-1) * -1); }
+.eg-composer .row .end { margin-left: auto; }
+.eg-foot { font: 400 11px/16px var(--font-chat); color: var(--ink-footnote); text-align: center; }
+
+/* Panel header */
+.eg-panelhead { height: var(--header-height); display: flex; align-items: center; gap: var(--space-3); padding: 0 var(--space-4); border-bottom: 1px solid var(--border); background: var(--surface); }
+.eg-panelhead .ttl { font: 400 14px/20px var(--font-ui); color: var(--ink-secondary); flex: 1; }
+
+/* Library additions */
+.eg-search { display: flex; align-items: center; gap: var(--space-2); height: 36px; padding: 0 var(--space-3); border: 1px solid var(--border-control); border-radius: var(--radius-md); background: var(--surface); color: var(--ink-placeholder); font: 400 14px/20px var(--font-ui); }
+.eg-filter { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 var(--space-3); border-radius: var(--radius-full); border: 1px solid var(--border); background: var(--surface); font: 400 13px/18px var(--font-ui); color: var(--ink-secondary); }
+.eg-filter.on { background: var(--brand-tint); border-color: var(--brand-tint); color: var(--brand-ink); font-weight: 500; }
+.eg-filter .n { color: var(--ink-muted); font-size: 12px; }
+.eg-filter.on .n { color: var(--brand-ink); }
+.eg-lrow { display: grid; grid-template-columns: minmax(0,1fr) 176px 120px 110px 28px; align-items: center; gap: var(--space-4); padding: var(--space-3) var(--space-4) var(--space-3) var(--space-3); border-bottom: 1px solid var(--border-soft); font: 400 13px/18px var(--font-ui); color: var(--ink-secondary); }
+.eg-lrow:hover { background: var(--surface-sidebar); }
+.eg-lrow .main { display: flex; align-items: center; gap: var(--space-3); min-width: 0; }
+.eg-lrow .ttl { font: 500 14px/20px var(--font-ui); color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.eg-lrow .sub { font: 400 12px/16px var(--font-ui); color: var(--ink-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.eg-lrow .sub a { color: var(--brand-ink); text-decoration: none; }
+.eg-lhead { display: grid; grid-template-columns: minmax(0,1fr) 176px 120px 110px 28px; gap: var(--space-4); padding: var(--space-2) var(--space-4) var(--space-2) var(--space-3); font: 500 12px/16px var(--font-ui); color: var(--ink-muted); border-bottom: 1px solid var(--border); }
+.eg-people { display: flex; }
+.eg-people .eg-avatar { width: 22px; height: 22px; font-size: 9px; border: 2px solid var(--surface); margin-left: -6px; }
+.eg-people .eg-avatar:first-child { margin-left: 0; }
+</code></pre>
+<h3>Tokens JSON</h3><pre><code>{
+ &quot;name&quot;: &quot;EverGPT&quot;,
+ &quot;version&quot;: 1,
+ &quot;meta&quot;: {
+  &quot;source&quot;: &quot;Screenshots in the Foundever EverGPT Library candidate assignment (chat + artifact panel, empty state). Values sampled from the 2x captures.&quot;
+ },
+ &quot;color&quot;: {
+  &quot;themes&quot;: [
+   {
+    &quot;id&quot;: &quot;light&quot;,
+    &quot;name&quot;: &quot;Light&quot;
+   }
+  ],
+  &quot;tokens&quot;: [
+   {
+    &quot;name&quot;: &quot;surface&quot;,
+    &quot;value&quot;: &quot;#ffffff&quot;,
+    &quot;usage&quot;: &quot;Main canvas: chat column, artifact panel, composer and asset cards.&quot;
+   },
+   {
+    &quot;name&quot;: &quot;surface-sidebar&quot;,
+    &quot;value&quot;: &quot;#f9f9fb&quot;,
+    &quot;usage&quot;: &quot;Left navigation rail background (empty-state capture; the chat capture reads #fafafa).&quot;
+   },
+   {
+    &quot;name&quot;: &quot;surface-muted&quot;,
+    &quot;value&quot;: &quot;#f3f2f7&quot;,
+    &quot;usage&quot;: &quot;Model selector (Cortex) fill and quiet hover fills on white.&quot;
+   },
+   {
+    &quot;name&quot;: &quot;surface-chip&quot;,
+    &quot;value&quot;: &quot;#ecebf1&quot;,
+    &quot;usage&quot;: &quot;Composer chips (attach, Search) and the round + button.&quot;
+   },
+   {
+    &quot;name&quot;: &quot;surface-tile&quot;,
+    &quot;value&quot;: &quot;#f2f2f2&quot;,
+    &quot;usage&quot;: &quot;Square icon tile at the start of an asset card.&quot;
+   },
+   {
+    &quot;name&quot;: &quot;surface-badge&quot;,
+    &quot;value&quot;: &quot;#f2f2f0&quot;,
+    &quot;usage&quot;: &quot;Neutral status badge fill (Draft).&quot;
+   },
+   {
+    &quot;name&quot;: &quot;border&quot;,
+    &quot;value&quot;: &quot;#ebebed&quot;,
+    &quot;usage&quot;: &quot;Sidebar divider, header rule, panel divider. 1px hairline.&quot;
+   },
+   {
+    &quot;name&quot;: &quot;border-soft&quot;,
+    &quot;value&quot;: &quot;#f2f2f2&quot;,
+    &quot;usage&quot;: &quot;Asset card outline. 1px.&quot;
+   },
+   {
+    &quot;name&quot;: &quot;border-control&quot;,
+    &quot;value&quot;: &quot;#d8d7dc&quot;,
+    &quot;usage&quot;: &quot;Composer outline. Decorative (1.43:1 on surface) \u2014 the composer is also lifted by shadow-composer.&quot;
+   },
+   {
+    &quot;name&quot;: &quot;brand&quot;,
+    &quot;value&quot;: &quot;#5959eb&quot;,
+    &quot;usage&quot;: &quot;The one action colour: Publish to Web, mic button, links in generated pages. White text on it is 5.18:1.&quot;
+   },
+   {
+    &quot;name&quot;: &quot;on-brand&quot;,
+    &quot;value&quot;: &quot;#ffffff&quot;,
+    &quot;usage&quot;: &quot;Text and icons on brand.&quot;
+   },
+   {
+    &quot;name&quot;: &quot;brand-soft&quot;,
+    &quot;value&quot;: &quot;#e4e4fe&quot;,
+    &quot;usage&quot;: &quot;User message bubble.&quot;
+   },
+   {
+    &quot;name&quot;: &quot;brand-tint&quot;,
+    &quot;value&quot;: &quot;#eeedff&quot;,
+    &quot;usage&quot;: &quot;Ever half of the logo lockup; selected nav row.&quot;
+   },
+   {
+    &quot;name&quot;: &quot;brand-line&quot;,
+    &quot;value&quot;: &quot;#908bff&quot;,
+    &quot;usage&quot;: &quot;GPT outline in the logo lockup only. Decorative, 2.87:1 \u2014 never for text or meaningful borders.&quot;
+   },
+   {
+    &quot;name&quot;: &quot;brand-ink&quot;,
+    &quot;value&quot;: &quot;#474397&quot;,
+    &quot;usage&quot;: &quot;Logo lettering and brand text on brand-tint / brand-soft (7.2:1).&quot;
+   },
+   {
+    &quot;name&quot;: &quot;ink&quot;,
+    &quot;value&quot;: &quot;#0a0a30&quot;,
+    &quot;usage&quot;: &quot;Deep navy: chat copy, headings, bubble text, composer chip text on surface and brand-soft.&quot;
+   },
+   {
+    &quot;name&quot;: &quot;ink-nav&quot;,
+    &quot;value&quot;: &quot;#111114&quot;,
+    &quot;usage&quot;: &quot;Sidebar item text on surface-sidebar.&quot;
+   },
+   {
+    &quot;name&quot;: &quot;ink-secondary&quot;,
+    &quot;value&quot;: &quot;#45444a&quot;,
+    &quot;usage&quot;: &quot;Badge text, panel title, icon strokes on surface and surface-badge.&quot;
+   },
+   {
+    &quot;name&quot;: &quot;ink-muted&quot;,
+    &quot;value&quot;: &quot;#636363&quot;,
+    &quot;usage&quot;: &quot;Sidebar section labels (Tools, Chats), asset subtitle (Not published), email on surface-sidebar and surface (5.7:1).&quot;
+   },
+   {
+    &quot;name&quot;: &quot;ink-footnote&quot;,
+    &quot;value&quot;: &quot;#626076&quot;,
+    &quot;usage&quot;: &quot;Disclaimer line under the composer, on surface (6.1:1).&quot;
+   },
+   {
+    &quot;name&quot;: &quot;ink-placeholder&quot;,
+    &quot;value&quot;: &quot;#787586&quot;,
+    &quot;usage&quot;: &quot;Composer placeholder on surface. 4.48:1 as captured \u2014 just under AA; kept exact from source.&quot;
+   },
+   {
+    &quot;name&quot;: &quot;avatar&quot;,
+    &quot;value&quot;: &quot;#aaefb9&quot;,
+    &quot;usage&quot;: &quot;User avatar disc in the sidebar footer.&quot;
+   },
+   {
+    &quot;name&quot;: &quot;on-avatar&quot;,
+    &quot;value&quot;: &quot;#0c3b1a&quot;,
+    &quot;usage&quot;: &quot;Initials on avatar (9.5:1).&quot;
+   },
+   {
+    &quot;name&quot;: &quot;status-published&quot;,
+    &quot;value&quot;: &quot;#e3f5e8&quot;,
+    &quot;usage&quot;: &quot;Library addition: Published badge fill. Derived from the avatar green.&quot;
+   },
+   {
+    &quot;name&quot;: &quot;on-status-published&quot;,
+    &quot;value&quot;: &quot;#1b6b34&quot;,
+    &quot;usage&quot;: &quot;Library addition: Published badge text on status-published (5.8:1).&quot;
+   },
+   {
+    &quot;name&quot;: &quot;status-shared&quot;,
+    &quot;value&quot;: &quot;{brand-soft}&quot;,
+    &quot;usage&quot;: &quot;Library addition: Shared badge fill.&quot;
+   },
+   {
+    &quot;name&quot;: &quot;on-status-shared&quot;,
+    &quot;value&quot;: &quot;#3d3ab8&quot;,
+    &quot;usage&quot;: &quot;Library addition: Shared badge text on status-shared (6.7:1).&quot;
+   },
+   {
+    &quot;name&quot;: &quot;status-review&quot;,
+    &quot;value&quot;: &quot;#fdf1d8&quot;,
+    &quot;usage&quot;: &quot;Library addition: Changes since publish badge fill.&quot;
+   },
+   {
+    &quot;name&quot;: &quot;on-status-review&quot;,
+    &quot;value&quot;: &quot;#8a5a00&quot;,
+    &quot;usage&quot;: &quot;Library addition: text on status-review (5.3:1).&quot;
+   }
+  ]
+ },
+ &quot;type&quot;: {
+  &quot;fonts&quot;: [],
+  &quot;families&quot;: {
+   &quot;ui&quot;: &quot;Inter, system-ui, -apple-system, Segoe UI, sans-serif&quot;,
+   &quot;chat&quot;: &quot;\&quot;Noto Sans\&quot;, Inter, system-ui, sans-serif&quot;,
+   &quot;display&quot;: &quot;Figtree, Inter, system-ui, sans-serif&quot;
+  },
+  &quot;groups&quot;: [
+   {
+    &quot;name&quot;: &quot;Display&quot;,
+    &quot;family&quot;: &quot;display&quot;,
+    &quot;styles&quot;: [
+     {
+      &quot;name&quot;: &quot;greeting&quot;,
+      &quot;fontSize&quot;: &quot;28px&quot;,
+      &quot;lineHeight&quot;: &quot;36px&quot;,
+      &quot;fontWeight&quot;: 600,
+      &quot;letterSpacing&quot;: &quot;-0.01em&quot;,
+      &quot;sample&quot;: &quot;How can I help you today?&quot;,
+      &quot;usage&quot;: &quot;Empty-state greeting, centred above the composer, in ink.&quot;
+     },
+     {
+      &quot;name&quot;: &quot;title&quot;,
+      &quot;fontSize&quot;: &quot;20px&quot;,
+      &quot;lineHeight&quot;: &quot;28px&quot;,
+      &quot;fontWeight&quot;: 600,
+      &quot;sample&quot;: &quot;Library&quot;,
+      &quot;usage&quot;: &quot;Page titles (Library header).&quot;
+     },
+     {
+      &quot;name&quot;: &quot;answer-heading&quot;,
+      &quot;fontSize&quot;: &quot;17px&quot;,
+      &quot;lineHeight&quot;: &quot;24px&quot;,
+      &quot;fontWeight&quot;: 700,
+      &quot;sample&quot;: &quot;Want to push it even further?&quot;,
+      &quot;usage&quot;: &quot;Headings inside assistant answers.&quot;
+     }
+    ]
+   },
+   {
+    &quot;name&quot;: &quot;Chat&quot;,
+    &quot;family&quot;: &quot;chat&quot;,
+    &quot;styles&quot;: [
+     {
+      &quot;name&quot;: &quot;message&quot;,
+      &quot;fontSize&quot;: &quot;15px&quot;,
+      &quot;lineHeight&quot;: &quot;22px&quot;,
+      &quot;fontWeight&quot;: 400,
+      &quot;sample&quot;: &quot;Create webpage about sales at foundever&quot;,
+      &quot;usage&quot;: &quot;User bubbles and assistant prose.&quot;
+     },
+     {
+      &quot;name&quot;: &quot;input&quot;,
+      &quot;fontSize&quot;: &quot;14px&quot;,
+      &quot;lineHeight&quot;: &quot;20px&quot;,
+      &quot;fontWeight&quot;: 400,
+      &quot;sample&quot;: &quot;Ask me anything&quot;,
+      &quot;usage&quot;: &quot;Composer text and placeholder; composer chips.&quot;
+     },
+     {
+      &quot;name&quot;: &quot;footnote&quot;,
+      &quot;fontSize&quot;: &quot;11px&quot;,
+      &quot;lineHeight&quot;: &quot;16px&quot;,
+      &quot;fontWeight&quot;: 400,
+      &quot;sample&quot;: &quot;EverGPT may make mistakes, so double-check important information.&quot;,
+      &quot;usage&quot;: &quot;Disclaimer under the composer, centred, ink-footnote.&quot;
+     }
+    ]
+   },
+   {
+    &quot;name&quot;: &quot;UI&quot;,
+    &quot;family&quot;: &quot;ui&quot;,
+    &quot;styles&quot;: [
+     {
+      &quot;name&quot;: &quot;nav&quot;,
+      &quot;fontSize&quot;: &quot;14px&quot;,
+      &quot;lineHeight&quot;: &quot;20px&quot;,
+      &quot;fontWeight&quot;: 400,
+      &quot;sample&quot;: &quot;Design system updates&quot;,
+      &quot;usage&quot;: &quot;Sidebar items and chat titles.&quot;
+     },
+     {
+      &quot;name&quot;: &quot;item-title&quot;,
+      &quot;fontSize&quot;: &quot;14px&quot;,
+      &quot;lineHeight&quot;: &quot;20px&quot;,
+      &quot;fontWeight&quot;: 500,
+      &quot;sample&quot;: &quot;Sales&quot;,
+      &quot;usage&quot;: &quot;Asset card / Library row title.&quot;
+     },
+     {
+      &quot;name&quot;: &quot;meta&quot;,
+      &quot;fontSize&quot;: &quot;12px&quot;,
+      &quot;lineHeight&quot;: &quot;16px&quot;,
+      &quot;fontWeight&quot;: 400,
+      &quot;sample&quot;: &quot;Not published&quot;,
+      &quot;usage&quot;: &quot;Asset subtitle, email, timestamps.&quot;
+     },
+     {
+      &quot;name&quot;: &quot;label&quot;,
+      &quot;fontSize&quot;: &quot;12px&quot;,
+      &quot;lineHeight&quot;: &quot;16px&quot;,
+      &quot;fontWeight&quot;: 500,
+      &quot;sample&quot;: &quot;Chats&quot;,
+      &quot;usage&quot;: &quot;Sidebar section labels in ink-muted; sentence case, not caps.&quot;
+     },
+     {
+      &quot;name&quot;: &quot;badge&quot;,
+      &quot;fontSize&quot;: &quot;12px&quot;,
+      &quot;lineHeight&quot;: &quot;16px&quot;,
+      &quot;fontWeight&quot;: 400,
+      &quot;sample&quot;: &quot;Draft&quot;,
+      &quot;usage&quot;: &quot;Status badges.&quot;
+     },
+     {
+      &quot;name&quot;: &quot;button&quot;,
+      &quot;fontSize&quot;: &quot;14px&quot;,
+      &quot;lineHeight&quot;: &quot;20px&quot;,
+      &quot;fontWeight&quot;: 500,
+      &quot;sample&quot;: &quot;Publish to Web&quot;,
+      &quot;usage&quot;: &quot;Buttons.&quot;
+     },
+     {
+      &quot;name&quot;: &quot;logo&quot;,
+      &quot;fontSize&quot;: &quot;11px&quot;,
+      &quot;lineHeight&quot;: &quot;14px&quot;,
+      &quot;fontWeight&quot;: 700,
+      &quot;letterSpacing&quot;: &quot;0.06em&quot;,
+      &quot;sample&quot;: &quot;Ever GPT&quot;,
+      &quot;usage&quot;: &quot;Logo lockup only.&quot;
+     }
+    ]
+   }
+  ]
+ },
+ &quot;spacing&quot;: {
+  &quot;tokens&quot;: [
+   {
+    &quot;name&quot;: &quot;space-1&quot;,
+    &quot;value&quot;: &quot;4px&quot;,
+    &quot;usage&quot;: &quot;Icon-to-label nudge, badge vertical padding.&quot;
+   },
+   {
+    &quot;name&quot;: &quot;space-2&quot;,
+    &quot;value&quot;: &quot;8px&quot;,
+    &quot;usage&quot;: &quot;Gap between composer chips; badge horizontal padding; icon gap in nav.&quot;
+   },
+   {
+    &quot;name&quot;: &quot;space-3&quot;,
+    &quot;value&quot;: &quot;12px&quot;,
+    &quot;usage&quot;: &quot;Bubble vertical padding; card inner gap; nav row horizontal padding.&quot;
+   },
+   {
+    &quot;name&quot;: &quot;space-4&quot;,
+    &quot;value&quot;: &quot;16px&quot;,
+    &quot;usage&quot;: &quot;Card padding; composer padding; sidebar inset.&quot;
+   },
+   {
+    &quot;name&quot;: &quot;space-6&quot;,
+    &quot;value&quot;: &quot;24px&quot;,
+    &quot;usage&quot;: &quot;Gap between messages; between sidebar groups.&quot;
+   },
+   {
+    &quot;name&quot;: &quot;space-8&quot;,
+    &quot;value&quot;: &quot;32px&quot;,
+    &quot;usage&quot;: &quot;Page gutters in the Library.&quot;
+   }
+  ]
+ },
+ &quot;radius&quot;: {
+  &quot;tokens&quot;: [
+   {
+    &quot;name&quot;: &quot;radius-xs&quot;,
+    &quot;value&quot;: &quot;4px&quot;,
+    &quot;usage&quot;: &quot;Status badges.&quot;
+   },
+   {
+    &quot;name&quot;: &quot;radius-sm&quot;,
+    &quot;value&quot;: &quot;6px&quot;,
+    &quot;usage&quot;: &quot;Model selector, composer chips, nav row hover, logo halves.&quot;
+   },
+   {
+    &quot;name&quot;: &quot;radius-md&quot;,
+    &quot;value&quot;: &quot;8px&quot;,
+    &quot;usage&quot;: &quot;Buttons (Publish to Web), icon tiles.&quot;
+   },
+   {
+    &quot;name&quot;: &quot;radius-lg&quot;,
+    &quot;value&quot;: &quot;10px&quot;,
+    &quot;usage&quot;: &quot;Asset cards and Library rows.&quot;
+   },
+   {
+    &quot;name&quot;: &quot;radius-xl&quot;,
+    &quot;value&quot;: &quot;12px&quot;,
+    &quot;usage&quot;: &quot;User message bubble.&quot;
+   },
+   {
+    &quot;name&quot;: &quot;radius-2xl&quot;,
+    &quot;value&quot;: &quot;16px&quot;,
+    &quot;usage&quot;: &quot;Composer.&quot;
+   },
+   {
+    &quot;name&quot;: &quot;radius-full&quot;,
+    &quot;value&quot;: &quot;9999px&quot;,
+    &quot;usage&quot;: &quot;Mic button, + button, avatar.&quot;
+   }
+  ]
+ },
+ &quot;shadow&quot;: {
+  &quot;tokens&quot;: [
+   {
+    &quot;name&quot;: &quot;shadow-composer&quot;,
+    &quot;value&quot;: &quot;0 6px 20px rgba(20, 18, 60, 0.08)&quot;,
+    &quot;usage&quot;: &quot;Composer only \u2014 the single elevated surface on the page.&quot;
+   },
+   {
+    &quot;name&quot;: &quot;shadow-menu&quot;,
+    &quot;value&quot;: &quot;0 8px 24px rgba(20, 18, 60, 0.12)&quot;,
+    &quot;usage&quot;: &quot;Overflow (\u22ee) menus and popovers.&quot;
+   }
+  ]
+ },
+ &quot;size&quot;: {
+  &quot;tokens&quot;: [
+   {
+    &quot;name&quot;: &quot;sidebar-width&quot;,
+    &quot;value&quot;: &quot;252px&quot;,
+    &quot;usage&quot;: &quot;Left rail.&quot;
+   },
+   {
+    &quot;name&quot;: &quot;header-height&quot;,
+    &quot;value&quot;: &quot;64px&quot;,
+    &quot;usage&quot;: &quot;Chat header and artifact panel header.&quot;
+   },
+   {
+    &quot;name&quot;: &quot;composer-width&quot;,
+    &quot;value&quot;: &quot;560px&quot;,
+    &quot;usage&quot;: &quot;Max width of the composer and the chat column.&quot;
+   },
+   {
+    &quot;name&quot;: &quot;control-height&quot;,
+    &quot;value&quot;: &quot;32px&quot;,
+    &quot;usage&quot;: &quot;Model selector, chips, primary button.&quot;
+   },
+   {
+    &quot;name&quot;: &quot;icon-button&quot;,
+    &quot;value&quot;: &quot;36px&quot;,
+    &quot;usage&quot;: &quot;Mic and + round buttons.&quot;
+   },
+   {
+    &quot;name&quot;: &quot;icon&quot;,
+    &quot;value&quot;: &quot;18px&quot;,
+    &quot;usage&quot;: &quot;Outline icons, 1.5px stroke.&quot;
+   }
+  ]
+ }
+}</code></pre></section>
+</div>
+</main>
+</div>
+<script type="application/json" id="evergpt-tokens-json">
+{
+ "name": "EverGPT",
+ "version": 1,
+ "meta": {
+  "source": "Screenshots in the Foundever EverGPT Library candidate assignment (chat + artifact panel, empty state). Values sampled from the 2x captures."
+ },
+ "color": {
+  "themes": [
+   {
+    "id": "light",
+    "name": "Light"
+   }
+  ],
+  "tokens": [
+   {
+    "name": "surface",
+    "value": "#ffffff",
+    "usage": "Main canvas: chat column, artifact panel, composer and asset cards."
+   },
+   {
+    "name": "surface-sidebar",
+    "value": "#f9f9fb",
+    "usage": "Left navigation rail background (empty-state capture; the chat capture reads #fafafa)."
+   },
+   {
+    "name": "surface-muted",
+    "value": "#f3f2f7",
+    "usage": "Model selector (Cortex) fill and quiet hover fills on white."
+   },
+   {
+    "name": "surface-chip",
+    "value": "#ecebf1",
+    "usage": "Composer chips (attach, Search) and the round + button."
+   },
+   {
+    "name": "surface-tile",
+    "value": "#f2f2f2",
+    "usage": "Square icon tile at the start of an asset card."
+   },
+   {
+    "name": "surface-badge",
+    "value": "#f2f2f0",
+    "usage": "Neutral status badge fill (Draft)."
+   },
+   {
+    "name": "border",
+    "value": "#ebebed",
+    "usage": "Sidebar divider, header rule, panel divider. 1px hairline."
+   },
+   {
+    "name": "border-soft",
+    "value": "#f2f2f2",
+    "usage": "Asset card outline. 1px."
+   },
+   {
+    "name": "border-control",
+    "value": "#d8d7dc",
+    "usage": "Composer outline. Decorative (1.43:1 on surface) \u2014 the composer is also lifted by shadow-composer."
+   },
+   {
+    "name": "brand",
+    "value": "#5959eb",
+    "usage": "The one action colour: Publish to Web, mic button, links in generated pages. White text on it is 5.18:1."
+   },
+   {
+    "name": "on-brand",
+    "value": "#ffffff",
+    "usage": "Text and icons on brand."
+   },
+   {
+    "name": "brand-soft",
+    "value": "#e4e4fe",
+    "usage": "User message bubble."
+   },
+   {
+    "name": "brand-tint",
+    "value": "#eeedff",
+    "usage": "Ever half of the logo lockup; selected nav row."
+   },
+   {
+    "name": "brand-line",
+    "value": "#908bff",
+    "usage": "GPT outline in the logo lockup only. Decorative, 2.87:1 \u2014 never for text or meaningful borders."
+   },
+   {
+    "name": "brand-ink",
+    "value": "#474397",
+    "usage": "Logo lettering and brand text on brand-tint / brand-soft (7.2:1)."
+   },
+   {
+    "name": "ink",
+    "value": "#0a0a30",
+    "usage": "Deep navy: chat copy, headings, bubble text, composer chip text on surface and brand-soft."
+   },
+   {
+    "name": "ink-nav",
+    "value": "#111114",
+    "usage": "Sidebar item text on surface-sidebar."
+   },
+   {
+    "name": "ink-secondary",
+    "value": "#45444a",
+    "usage": "Badge text, panel title, icon strokes on surface and surface-badge."
+   },
+   {
+    "name": "ink-muted",
+    "value": "#636363",
+    "usage": "Sidebar section labels (Tools, Chats), asset subtitle (Not published), email on surface-sidebar and surface (5.7:1)."
+   },
+   {
+    "name": "ink-footnote",
+    "value": "#626076",
+    "usage": "Disclaimer line under the composer, on surface (6.1:1)."
+   },
+   {
+    "name": "ink-placeholder",
+    "value": "#787586",
+    "usage": "Composer placeholder on surface. 4.48:1 as captured \u2014 just under AA; kept exact from source."
+   },
+   {
+    "name": "avatar",
+    "value": "#aaefb9",
+    "usage": "User avatar disc in the sidebar footer."
+   },
+   {
+    "name": "on-avatar",
+    "value": "#0c3b1a",
+    "usage": "Initials on avatar (9.5:1)."
+   },
+   {
+    "name": "status-published",
+    "value": "#e3f5e8",
+    "usage": "Library addition: Published badge fill. Derived from the avatar green."
+   },
+   {
+    "name": "on-status-published",
+    "value": "#1b6b34",
+    "usage": "Library addition: Published badge text on status-published (5.8:1)."
+   },
+   {
+    "name": "status-shared",
+    "value": "{brand-soft}",
+    "usage": "Library addition: Shared badge fill."
+   },
+   {
+    "name": "on-status-shared",
+    "value": "#3d3ab8",
+    "usage": "Library addition: Shared badge text on status-shared (6.7:1)."
+   },
+   {
+    "name": "status-review",
+    "value": "#fdf1d8",
+    "usage": "Library addition: Changes since publish badge fill."
+   },
+   {
+    "name": "on-status-review",
+    "value": "#8a5a00",
+    "usage": "Library addition: text on status-review (5.3:1)."
+   }
+  ]
+ },
+ "type": {
+  "fonts": [],
+  "families": {
+   "ui": "Inter, system-ui, -apple-system, Segoe UI, sans-serif",
+   "chat": "\"Noto Sans\", Inter, system-ui, sans-serif",
+   "display": "Figtree, Inter, system-ui, sans-serif"
+  },
+  "groups": [
+   {
+    "name": "Display",
+    "family": "display",
+    "styles": [
+     {
+      "name": "greeting",
+      "fontSize": "28px",
+      "lineHeight": "36px",
+      "fontWeight": 600,
+      "letterSpacing": "-0.01em",
+      "sample": "How can I help you today?",
+      "usage": "Empty-state greeting, centred above the composer, in ink."
+     },
+     {
+      "name": "title",
+      "fontSize": "20px",
+      "lineHeight": "28px",
+      "fontWeight": 600,
+      "sample": "Library",
+      "usage": "Page titles (Library header)."
+     },
+     {
+      "name": "answer-heading",
+      "fontSize": "17px",
+      "lineHeight": "24px",
+      "fontWeight": 700,
+      "sample": "Want to push it even further?",
+      "usage": "Headings inside assistant answers."
+     }
+    ]
+   },
+   {
+    "name": "Chat",
+    "family": "chat",
+    "styles": [
+     {
+      "name": "message",
+      "fontSize": "15px",
+      "lineHeight": "22px",
+      "fontWeight": 400,
+      "sample": "Create webpage about sales at foundever",
+      "usage": "User bubbles and assistant prose."
+     },
+     {
+      "name": "input",
+      "fontSize": "14px",
+      "lineHeight": "20px",
+      "fontWeight": 400,
+      "sample": "Ask me anything",
+      "usage": "Composer text and placeholder; composer chips."
+     },
+     {
+      "name": "footnote",
+      "fontSize": "11px",
+      "lineHeight": "16px",
+      "fontWeight": 400,
+      "sample": "EverGPT may make mistakes, so double-check important information.",
+      "usage": "Disclaimer under the composer, centred, ink-footnote."
+     }
+    ]
+   },
+   {
+    "name": "UI",
+    "family": "ui",
+    "styles": [
+     {
+      "name": "nav",
+      "fontSize": "14px",
+      "lineHeight": "20px",
+      "fontWeight": 400,
+      "sample": "Design system updates",
+      "usage": "Sidebar items and chat titles."
+     },
+     {
+      "name": "item-title",
+      "fontSize": "14px",
+      "lineHeight": "20px",
+      "fontWeight": 500,
+      "sample": "Sales",
+      "usage": "Asset card / Library row title."
+     },
+     {
+      "name": "meta",
+      "fontSize": "12px",
+      "lineHeight": "16px",
+      "fontWeight": 400,
+      "sample": "Not published",
+      "usage": "Asset subtitle, email, timestamps."
+     },
+     {
+      "name": "label",
+      "fontSize": "12px",
+      "lineHeight": "16px",
+      "fontWeight": 500,
+      "sample": "Chats",
+      "usage": "Sidebar section labels in ink-muted; sentence case, not caps."
+     },
+     {
+      "name": "badge",
+      "fontSize": "12px",
+      "lineHeight": "16px",
+      "fontWeight": 400,
+      "sample": "Draft",
+      "usage": "Status badges."
+     },
+     {
+      "name": "button",
+      "fontSize": "14px",
+      "lineHeight": "20px",
+      "fontWeight": 500,
+      "sample": "Publish to Web",
+      "usage": "Buttons."
+     },
+     {
+      "name": "logo",
+      "fontSize": "11px",
+      "lineHeight": "14px",
+      "fontWeight": 700,
+      "letterSpacing": "0.06em",
+      "sample": "Ever GPT",
+      "usage": "Logo lockup only."
+     }
+    ]
+   }
+  ]
+ },
+ "spacing": {
+  "tokens": [
+   {
+    "name": "space-1",
+    "value": "4px",
+    "usage": "Icon-to-label nudge, badge vertical padding."
+   },
+   {
+    "name": "space-2",
+    "value": "8px",
+    "usage": "Gap between composer chips; badge horizontal padding; icon gap in nav."
+   },
+   {
+    "name": "space-3",
+    "value": "12px",
+    "usage": "Bubble vertical padding; card inner gap; nav row horizontal padding."
+   },
+   {
+    "name": "space-4",
+    "value": "16px",
+    "usage": "Card padding; composer padding; sidebar inset."
+   },
+   {
+    "name": "space-6",
+    "value": "24px",
+    "usage": "Gap between messages; between sidebar groups."
+   },
+   {
+    "name": "space-8",
+    "value": "32px",
+    "usage": "Page gutters in the Library."
+   }
+  ]
+ },
+ "radius": {
+  "tokens": [
+   {
+    "name": "radius-xs",
+    "value": "4px",
+    "usage": "Status badges."
+   },
+   {
+    "name": "radius-sm",
+    "value": "6px",
+    "usage": "Model selector, composer chips, nav row hover, logo halves."
+   },
+   {
+    "name": "radius-md",
+    "value": "8px",
+    "usage": "Buttons (Publish to Web), icon tiles."
+   },
+   {
+    "name": "radius-lg",
+    "value": "10px",
+    "usage": "Asset cards and Library rows."
+   },
+   {
+    "name": "radius-xl",
+    "value": "12px",
+    "usage": "User message bubble."
+   },
+   {
+    "name": "radius-2xl",
+    "value": "16px",
+    "usage": "Composer."
+   },
+   {
+    "name": "radius-full",
+    "value": "9999px",
+    "usage": "Mic button, + button, avatar."
+   }
+  ]
+ },
+ "shadow": {
+  "tokens": [
+   {
+    "name": "shadow-composer",
+    "value": "0 6px 20px rgba(20, 18, 60, 0.08)",
+    "usage": "Composer only \u2014 the single elevated surface on the page."
+   },
+   {
+    "name": "shadow-menu",
+    "value": "0 8px 24px rgba(20, 18, 60, 0.12)",
+    "usage": "Overflow (\u22ee) menus and popovers."
+   }
+  ]
+ },
+ "size": {
+  "tokens": [
+   {
+    "name": "sidebar-width",
+    "value": "252px",
+    "usage": "Left rail."
+   },
+   {
+    "name": "header-height",
+    "value": "64px",
+    "usage": "Chat header and artifact panel header."
+   },
+   {
+    "name": "composer-width",
+    "value": "560px",
+    "usage": "Max width of the composer and the chat column."
+   },
+   {
+    "name": "control-height",
+    "value": "32px",
+    "usage": "Model selector, chips, primary button."
+   },
+   {
+    "name": "icon-button",
+    "value": "36px",
+    "usage": "Mic and + round buttons."
+   },
+   {
+    "name": "icon",
+    "value": "18px",
+    "usage": "Outline icons, 1.5px stroke."
+   }
+  ]
+ }
+}
+</script>
+</body>
+</html>

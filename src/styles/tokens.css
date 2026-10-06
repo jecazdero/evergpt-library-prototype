@@ -1,0 +1,68 @@
+:root {
+  --surface: #ffffff;
+  --surface-sidebar: #f9f9fb;
+  --surface-muted: #f3f2f7;
+  --surface-chip: #ecebf1;
+  --surface-tile: #f2f2f2;
+  --surface-badge: #f2f2f0;
+  --border: #ebebed;
+  --border-soft: #f2f2f2;
+  --border-control: #d8d7dc;
+  --brand: #5959eb;
+  --on-brand: #ffffff;
+  --brand-soft: #e4e4fe;
+  --brand-tint: #eeedff;
+  --brand-line: #908bff;
+  --brand-ink: #474397;
+  --ink: #0a0a30;
+  --ink-nav: #111114;
+  --ink-secondary: #45444a;
+  --ink-muted: #636363;
+  --ink-footnote: #626076;
+  --ink-placeholder: #787586;
+  --avatar: #aaefb9;
+  --on-avatar: #0c3b1a;
+  --status-published: #e3f5e8;
+  --on-status-published: #1b6b34;
+  --status-shared: var(--brand-soft);
+  --on-status-shared: #3d3ab8;
+  --status-review: #fdf1d8;
+  --on-status-review: #8a5a00;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-full: 9999px;
+  --shadow-composer: 0 6px 20px rgba(20, 18, 60, 0.08);
+  --shadow-menu: 0 8px 24px rgba(20, 18, 60, 0.12);
+  --sidebar-width: 252px;
+  --header-height: 64px;
+  --composer-width: 560px;
+  --control-height: 32px;
+  --icon-button: 36px;
+  --icon: 18px;
+  --font-ui: Inter, system-ui, -apple-system, Segoe UI, sans-serif;
+  --font-chat: "Noto Sans", Inter, system-ui, sans-serif;
+  --font-display: Figtree, Inter, system-ui, sans-serif;
+}
+.t-greeting { font-family:var(--font-display); font-size:28px; line-height:36px; font-weight:600; letter-spacing:-0.01em;}
+.t-title { font-family:var(--font-display); font-size:20px; line-height:28px; font-weight:600; }
+.t-answer-heading { font-family:var(--font-display); font-size:17px; line-height:24px; font-weight:700; }
+.t-message { font-family:var(--font-chat); font-size:15px; line-height:22px; font-weight:400; }
+.t-input { font-family:var(--font-chat); font-size:14px; line-height:20px; font-weight:400; }
+.t-footnote { font-family:var(--font-chat); font-size:11px; line-height:16px; font-weight:400; }
+.t-nav { font-family:var(--font-ui); font-size:14px; line-height:20px; font-weight:400; }
+.t-item-title { font-family:var(--font-ui); font-size:14px; line-height:20px; font-weight:500; }
+.t-meta { font-family:var(--font-ui); font-size:12px; line-height:16px; font-weight:400; }
+.t-label { font-family:var(--font-ui); font-size:12px; line-height:16px; font-weight:500; }
+.t-badge { font-family:var(--font-ui); font-size:12px; line-height:16px; font-weight:400; }
+.t-button { font-family:var(--font-ui); font-size:14px; line-height:20px; font-weight:500; }
+.t-logo { font-family:var(--font-ui); font-size:11px; line-height:14px; font-weight:700; letter-spacing:0.06em;}
