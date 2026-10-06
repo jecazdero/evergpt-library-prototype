@@ -1,5 +1,7 @@
 # EverGPT Library
 
+![EverGPT Library: cover](docs/preview.webp)
+
 **A home for the work people make in EverGPT.** Today every asset (a webpage, a report, a deck) lives inside the chat that produced it. This project redesigns that model: the Library makes the asset the main object, and the chat becomes where it came from.
 
 Design assignment for Foundever · Product Design · 2026
